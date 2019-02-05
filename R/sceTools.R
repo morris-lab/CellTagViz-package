@@ -12,7 +12,7 @@
 #' @param redMethod String Name of dimension reduction method to visualize.
 #' Must be one of methods listed in \code{names(sce@@reducedDim)}
 #'
-#' @param cells Character List of cells used to subset data. (Optional)
+#' @param cells Character Vector of cells used to subset data. (Optional)
 #'
 #' @return The function returns the cell embeddings stored in the given slot of
 #' the SingleCellExperiment object.
@@ -42,6 +42,31 @@ getEmbeddings <- function(sce, redMethod, cells = FALSE){
 
   return(embeddings)
 }
+
+
+#' Function used to access meta data (colData) of an SCE object.
+#'
+#' \code{getMetaData} returns the meta data variable \emph{varName} of the SCE
+#' object \emph{sce} for the given vector of cells, \emph{cells}.
+#'
+#' @param sce SingleCellExperiment Object
+#'
+#' @param varName String Name of the variable to return from meta/col data.
+#'
+#' @param cells Character Vector of Cell Barcodes used to subset data.
+#'
+#' @return This function returns given meta data (\emph{varName}) for the given
+#' cells (\emph{cells}) of a SCE object (\emph{sce}).
+#'
+#' @examples
+#'
+#' metaData <- sample(letters, 15)
+#'
+#' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
+#'
+#' letters <- getMetaData(sce, "Letters")
+#'
+#' @export
 
 getMetaData <- function(sce, varName, cells = FALSE){
 

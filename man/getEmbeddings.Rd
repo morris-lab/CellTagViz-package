@@ -12,7 +12,7 @@ getEmbeddings(sce, redMethod, cells = FALSE)
 \item{redMethod}{String Name of dimension reduction method to visualize.
 Must be one of methods listed in \code{names(sce@reducedDim)}}
 
-\item{cells}{Character List of cells used to subset data. (Optional)}
+\item{cells}{Character Vector of cells used to subset data. (Optional)}
 }
 \value{
 The function returns the cell embeddings stored in the given slot of
