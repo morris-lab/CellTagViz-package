@@ -14,3 +14,4 @@ Imports:
     SingleCellExperiment,
     Matrix,
     methods
+RoxygenNote: 6.1.1

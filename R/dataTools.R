@@ -92,7 +92,7 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
         bcMat <- Matrix::Matrix(nrow = nrow(data2add),
                                 ncol = length(missingBCs))
 
-        data2add <- cbind(data2add, bcMat)
+        data2add <- base::cbind(data2add, bcMat)
 
     }
 
@@ -101,7 +101,7 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
         featureMat <- Matrix::Matrix(nrow = length(missingFeatures),
                                      ncol = ncol(data2add))
 
-        data2add <- rbind(data2add, featureMat)
+        data2add <- base::rbind(data2add, featureMat)
 
     }
 
