@@ -10,7 +10,7 @@ getEmbeddings(sce, redMethod, cells = FALSE)
 \item{sce}{SingleCellExperiment Object}
 
 \item{redMethod}{String Name of dimension reduction method to visualize.
-Must be one of methods listed in \cod{names(sce@reducedDim)}}
+Must be one of methods listed in \code{names(sce@reducedDim)}}
 
 \item{cells}{Character List of cells used to subset data. (Optional)}
 }
@@ -29,8 +29,13 @@ combined with metadata to generate visualizations with ggplot2.
 }
 \examples{
 
-cellEmbeddings <- getEmbeddings(sce, "cca.Seurat")
+sce <- SingleCellExperiment::SingleCellExperiment()
 
+sce@reducedDims@listData$tSNE <- matrix(data = rnorm(100),
+                                          nrow = 10,
+                                          ncol = 10)
+
+cellEmbeddings <- getEmbeddings(sce, "tSNE")
 
 
 }

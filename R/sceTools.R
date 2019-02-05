@@ -1,34 +1,39 @@
-
-#'Access the cell embeddings of SCE object.
+#' Access the cell embeddings of SCE object.
 #'
-#'\code{getEmbeddings} returns the coordinates of cells after dimension
-#'reduction.
+#' \code{getEmbeddings} returns the coordinates of cells after dimension
+#' reduction.
 #'
-#'This is a function used to subset SCE objects. The output is used to generate
-#'a data frame which is compatible with ggplot. The cell embeddings are then
-#'combined with metadata to generate visualizations with ggplot2.
+#' This is a function used to subset SCE objects. The output is used to generate
+#' a data frame which is compatible with ggplot. The cell embeddings are then
+#' combined with metadata to generate visualizations with ggplot2.
 #'
-#'@param sce SingleCellExperiment Object
+#' @param sce SingleCellExperiment Object
 #'
-#'@param redMethod String Name of dimension reduction method to visualize.
-#'Must be one of methods listed in \cod{names(sce@@reducedDim)}
+#' @param redMethod String Name of dimension reduction method to visualize.
+#' Must be one of methods listed in \code{names(sce@@reducedDim)}
 #'
-#'@param cells Character List of cells used to subset data. (Optional)
+#' @param cells Character List of cells used to subset data. (Optional)
 #'
-#'@return The function returns the cell embeddings stored in the given slot of
-#'the SingleCellExperiment object.
-#'
-#'
-#'@examples
-#'
-#'cellEmbeddings <- getEmbeddings(sce, "cca.Seurat")
+#' @return The function returns the cell embeddings stored in the given slot of
+#' the SingleCellExperiment object.
 #'
 #'
+#' @examples
 #'
+#' sce <- SingleCellExperiment::SingleCellExperiment()
+#'
+#' sce@@reducedDims@@listData$tSNE <- matrix(data = rnorm(100),
+#'                                           nrow = 10,
+#'                                           ncol = 10)
+#'
+#' cellEmbeddings <- getEmbeddings(sce, "tSNE")
+#'
+#'
+#' @export
 
 getEmbeddings <- function(sce, redMethod, cells = FALSE){
 
-  embeddings <- reducedDim(sce, redMethod)
+  embeddings <- SingleCellExperiment::reducedDim(sce, redMethod)
 
   if(cells){
 
