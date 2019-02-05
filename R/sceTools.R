@@ -45,7 +45,7 @@ getEmbeddings <- function(sce, redMethod, cells = FALSE){
 
 getMetaData <- function(sce, varName, cells = FALSE){
 
-  metaData <- colData(sce)[varName]
+  metaData <- SingleCellExperiment::colData(sce)[varName]
 
   if(cells){
 
@@ -60,7 +60,7 @@ makePlotData <- function(sce, redMethod, metaVar, cells = FALSE){
 
   embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
 
-  embeddings <- as(embeddings[,1:2], "DataFrame")
+  embeddings <- methods::as(embeddings[,1:2], "DataFrame")
 
   metaData <- getMetaData(sce = sce, varName = metaVar, cells = cells)
 

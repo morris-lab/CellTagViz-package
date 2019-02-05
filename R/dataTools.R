@@ -59,15 +59,15 @@ initializeSCE <- function(cellBCs, features) {
 
 addExprData <- function(sce, exprMat, datName) {
 
-    exprMat <- Matrix(exprMat, sparse = TRUE)
+    exprMat <- Matrix::Matrix(exprMat, sparse = TRUE)
 
     missingGenes <- rownames(sce)[!rownames(sce) %in% rownames(exprMat)]
 
     missingCells <- colnames(sce)[!colnames(sce) %in% colnames(exprMat)]
 
-    cellMat <- Matrix(nrow = nrow(exprMat), ncol = length(missingCells))
+    cellMat <- Matrix::Matrix(nrow = nrow(exprMat), ncol = length(missingCells))
 
-    geneMat <- Matrix(nrow = length(missingGenes), ncol = ncol(exprMat))
+    geneMat <- Matrix::Matrix(nrow = length(missingGenes), ncol = ncol(exprMat))
 
     exprMat <- cbind(exprMat, cellMat)
 
