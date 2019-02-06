@@ -81,6 +81,43 @@ getMetaData <- function(sce, varName, cells = FALSE){
 
 }
 
+
+#' Generates ggplot2 compatible data frames.
+#'
+#' \code{makePlotData} creates data frames for use with ggplot2 visualizations.
+#' This is accomplished by calling two functions \code{getEmbeddings} and
+#' \code{getMetaData}. The objects returned by both of these functions are
+#' then merged into one single data frame. This combined data frame contains the
+#' coordinates of each cell from the given dimension reduction method along with
+#' the given meta data which can then be used for grouping and coloring purposes.
+#'
+#' @param sce SingleCellExperiment Object
+#'
+#' @param redMethod String Name of the dimension reduction method to visualize.
+#'
+#' @param metaVar String Name of the column to return from meta/col Data.
+#'
+#' @param cells Character Vector of Cell Barcodes used to subset data.
+#'
+#' @return This function returns a data frame which can be used to plot and color
+#' cells from an SCE object using ggplot2.
+#'
+#' @examples
+#'
+#' metaData <- sample(letters, 15)
+#'
+#' tSNE.embeddings <- matrix(data = rnorm(100),
+#'                           nrow = 25,
+#'                           ncol = 15)
+#'
+#' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
+#'
+#' sce@@reducedDims@@listData$tSNE <- tSNE.embeddings
+#'
+#' plotData <- makePlotData(sce, "tSNE", "Letters")
+#'
+#' @export
+
 makePlotData <- function(sce, redMethod, metaVar, cells = FALSE){
 
   embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)

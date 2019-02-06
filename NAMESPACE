@@ -2,3 +2,4 @@
 
 export(getEmbeddings)
 export(getMetaData)
+export(makePlotData)
