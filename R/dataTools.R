@@ -9,6 +9,36 @@
 # ==============================================================================
 
 
+
+#' Creates CellTagViz compatable data sets.
+#'
+#' \code{makeVizData} currently accepts Seurat and Monocle objects and returns
+#' a SingleCellExperiment object for use with CellTagViz.
+#'
+#' This function accepts Seurat and Monocle objects. The data from these objects
+#' is then combined and used to create a SingleCellExperiment object. This object
+#' is compatable with CellTagViz and allows simple visualiztion of the analysis
+#' performed with Seurat and Monocle.
+#'
+#' @param dataSets List This is a named list which contains the Seurat and Monocle
+#' objects. The names for the list must be Seurat or Monocle corresponding to the
+#' object.
+#'
+#' @return The function returns a SCE object with the data from Monocle and Seurat
+#' objects combined.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' dataSets <- list(seurat = seuratObj, monocle = monocleObj)
+#'
+#' sce <- makeVizData(dataSets)
+#'
+#' }
+#'
+#' @export
+
 makeVizData <- function(dataSets) {
 
     names(dataSets) <- toupper(names(dataSets))
@@ -33,11 +63,64 @@ makeVizData <- function(dataSets) {
     return(sceObject)
 }
 
+#' Returns vector of Cell Barcodes.
+#'
+#' \code{getCellBarcodes} is a helper function used to generate a list of Cell
+#' Barcodes from Monocle and Seurat objects.
+#'
+#' This function accepts a Seurat and Monocle object, finds the union of the
+#' cell barcodes in each object, and returns the character vector of the union
+#' of the cell barcodes in both the Monocle and Seurat objects.
+#'
+#' @param seurat Seurat Object
+#'
+#' @param monocle Monocle Object
+#'
+#' @return THe function returns the union of the cell barcodes present in the
+#' given Monocle and Seurat objects.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cellBCs <- getCellBarcodes(seuratObj, monocleObj)
+#'
+#' }
+#'
+#' @export
+
 getCellBarcodes <- function(seurat, monocle) {
 
     barcodes <- union(seurat@cell.names, colnames(monocle))
 
 }
+
+#' Returns character vector of Feature Names.
+#'
+#' \code{getFeatures} is a helper function used to generate a list of the feature
+#' names from Monocle and Seurat objects.
+#'
+#' This function accepts a Seurat and Monocle object, finds the union of the
+#' feature names in each object, and returns the character vector of the union
+#' of the feature names present in both the Monocle and Seurat objects.
+#'
+#' @param seurat Seurat Object
+#'
+#' @param monocle Monocle Object
+#'
+#' @return THe function returns the union of the feature names present in the
+#' given Monocle and Seurat objects.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' featureList <- getFeatures(seuratObj, monocleObj)
+#'
+#' }
+#'
+#' @export
+
 
 getFeatures <- function(seurat, monocle) {
 
