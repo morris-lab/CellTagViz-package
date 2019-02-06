@@ -128,6 +128,39 @@ getFeatures <- function(seurat, monocle) {
 
 }
 
+#' Initializes SCE object for Monocle and Seurat Data.
+#'
+#' \code{initializeSCE} is a helper function used to initialize an SCE object
+#' with the correct cell barcodes and feature list.
+#'
+#' This function takes a list of cell barcodes and feature names and creates
+#' an empty SCE object with the given cell barcodes and features. This empty
+#' SCE object is then utilized to combine and add Monocle and Seurat data.
+#'
+#' @param cellBCs Character Vector of Cell Barcodes. Typically the output from
+#' the function \code{getCellBarcodes}.
+#'
+#' @param features Character Vector of Feature Names. Typically the output
+#' from the function \code{getFeatures}
+#'
+#' @return The function returns an empty SCE object with the given cell barcodes
+#' and feature names. The SCE object can then be used to add Monocle and Seurat
+#' data to.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cellBCs <- getCellBarcodes(seuratObj, monocleObj)
+#'
+#' featureList <- getFeatures(seuratObj, monocleObj)
+#'
+#' sce <- initializeSCE(cellBCs, featureList)
+#'
+#' }
+#'
+#' @export
+
 initializeSCE <- function(cellBCs, features) {
 
     cellDF <- data.frame(row.names = cellBCs)
