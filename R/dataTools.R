@@ -173,6 +173,42 @@ initializeSCE <- function(cellBCs, features) {
     return(sce)
 }
 
+
+#' Function to add expression data to SCE object.
+#'
+#' \code{addExprData} is a helper function used to add expression matrices to an
+#' SCE object.
+#'
+#' This function accepts a SCE object, an expression matrix, and a name for the
+#' expression matrix. The expression matrix is typically Gene count data stored
+#' in either a monocle or seurat object. This expression matrix is first
+#' converted into a sparse matrix. Then cells and features that do not appear
+#' in the matrix are added with 0 counts as values. Cells and Features may be
+#' missing due to them being present in only one data set (Seurat or Monocle).
+#' Once the missing cell barcodes and features have been added the sparse
+#' expression matrix is then stored in the SCE object under the given name
+#' (\code{datName}).
+#'
+#' @param sce Single Cell Experiment Object
+#'
+#' @param exprMat Matrix or object that can be coerced to a matrix containing
+#' Feature count data.
+#'
+#' @param datName String Containing a unique ID for the expression matrix (\code{exprMat})
+#'
+#' @return The function returns a SCE object with the given expression matrix
+#' stored under the name \code{datName} in the assays slot of the SCE object.
+#'
+#' @examples
+#'
+#' sce <- SingleCellExperiment::SingleCellExperiment()
+#'
+#' counts <- matrix(rnorm(100), 10, 10)
+#'
+#' sce <- addExprData(sce, counts, "Counts")
+#'
+#' @export
+
 addExprData <- function(sce, exprMat, datName) {
 
     exprMat <- Matrix::Matrix(exprMat, sparse = TRUE)
@@ -194,6 +230,39 @@ addExprData <- function(sce, exprMat, datName) {
     return(sce)
 }
 
+#' Creates sparse matrices of feature count data
+#'
+#' \code{makeDataMatrix} accepts a matrix like object of feature count data
+#' and returns a sparse matrix of the feature counts.
+#'
+#' This is a helper function for adding feature counts to SCE objects.
+#' A matrix of feature counts typically from a Seurat or Monocle object is
+#' accepted as an argument. This matrix is then coerced into a sparse matrix and
+#' missing cell barcodes and/or features are identified. The missing cell
+#' barcodes and features are then added to the matrix with 0 values. The
+#' completed matrix is then returned and can be stored as data in the assays
+#' slot of an SCE object.
+#'
+#' @param data2add Matrix-like object of feature counts
+#'
+#' @param cellBCs Vector of all Cell Barcodes in the SCE
+#'
+#' @param features Vector of all features in the SCE
+#'
+#' @return The function returns a sparse matrix of feature counts to be stored
+#' in a SCE object
+#'
+#' @examples
+#'
+#' barcodes <- c("BC1", "BC2")
+#'
+#' genes <- c("Apoa1", "Mettl7a1")
+#'
+#' exprMat <- matrix(rnorm(100), 3, 3)
+#'
+#' newMat <- makeDataMatrix(exprMat, barcodes, genes)
+#'
+#' @export
 
 makeDataMatrix <- function(data2add, cellBCs, features) {
 
