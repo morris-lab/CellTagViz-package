@@ -61,3 +61,13 @@ generatePlotData <- function(sce, metaData, geneChoice, redMethod){
 allData <- plyr::join(plotData, metaData)
 
 ggplot(data = allData) + geom_point(aes(x = ACC1, y = ACC2, color = State.Monocle))
+
+
+
+
+
+testRun <- function(){
+
+ shiny::shinyAppFile("~/working/working.Viz/R/app.R")
+
+}
