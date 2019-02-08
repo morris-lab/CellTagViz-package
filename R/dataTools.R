@@ -294,6 +294,42 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
 
 }
 
+#' Add Seurat object data to an SCE object
+#'
+#' \code{addSeuratData} is a function used to parse Seurat objects and add the
+#' data contained in seurat objects to a SCE object.
+#'
+#' This is the main function used to add data to a SCE object from a seurat object.
+#' This function identifies the cell barcodes and features listed in the seurat object.
+#' The raw and scaled expression data from the seurat object are added to the assays slot
+#' of the SCE object. These data are processed to make sure all of the cells
+#' and features from both the monocle object and seurat object are represented.
+#' Furthermore, the meta data from the seurat object is added to the colData of
+#' the SCE object. Each variable name in the seurat meta data is given the
+#' suffix ".Seurat" to identify its origins once stored in the SCE object.
+#' The cell embeddings for each dimension reduction mehtod used in seurat are
+#' stored in the SCE object. Once again the names for each set of cell embeddings
+#' is suffixed with ".Seurat" to identify the origins of the embeddings.
+#'
+#' @param sce Single Cell Experiment Object used to store data
+#'
+#' @param seurat Seurat Object from which data will be transferred from.
+#'
+#' @return The function returns a SingleCellExperiment object which stores select
+#' data from the given seurat object.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' sce <- SingleCellExperiment()
+#'
+#' sceData <- addSeuratData(sce, seuratObj)
+#'
+#' }
+#'
+#' @export
+
 addSeuratData <- function(sce, seurat) {
 
     barcodeList <- colnames(sce)

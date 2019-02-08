@@ -45,7 +45,7 @@ welcomePanel <- function(id){
 
            mainPanel(
 
-               includeMarkdown("~/working/working.Viz/markdown/WELCOME.md")
+               includeMarkdown("./markdown/WELCOME.md")
 
            )
   )
@@ -81,7 +81,7 @@ peoplePanel <- function(id){
 
            mainPanel(
 
-             includeMarkdown("~/working/working.Viz/markdown/PEOPLE.md")
+             includeHTML("./markdown/PEOPLE.html")
 
            )
 
@@ -92,7 +92,7 @@ peoplePanel <- function(id){
 
 cellTagViz <- function(){
 
-  shiny::shinyAppFile(appFile = "~/working/working.Viz/R/app.R")
+  shiny::shinyAppFile(appFile = "app.R")
 
 }
 

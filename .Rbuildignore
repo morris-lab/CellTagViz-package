@@ -1,8 +1,9 @@
+^scratch\.pad\.R$
+^R/linked_scatter\.R$
+^R/app\.R$
 ^LICENSE\.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-R/scratch.pad.R
 R/hello.R
 man/hello.Rd
 
-scratch.pad.R
