@@ -56,12 +56,22 @@ plotsPanel <- function(id){
 
   ns <- NS(id)
 
-  tabPanel("Plots",
+  sidebarLayout(
+    sidebarPanel(
+      geneChoiceUI(id),
+      varChoiceUI(id)
+    ),
+
+
+  mainPanel("Plots",
            tabsetPanel(
              tabPanel("Dimension Reduction"),
              tabPanel("Stacked Bar Chart"),
              tabPanel("Network Viz")
-           ))
+           )
+  )
+
+)
 
 }
 
@@ -95,6 +105,36 @@ cellTagViz <- function(){
   shiny::shinyAppFile(appFile = "app.R")
 
 }
+
+
+geneChoiceUI <- function(id, label = "Gene Choice"){
+
+  ns <- NS(id)
+
+  tagList(
+
+    selectizeInput("GENE", "Please choose a gene symbol", letters)
+
+  )
+
+
+}
+
+varChoiceUI <- function(id, label = "Var Choice"){
+
+  ns <- NS(id)
+
+  tagList(
+
+    selectizeInput("METAVAR", "Please choose a meta data variable", LETTERS)
+
+  )
+
+
+}
+
+
+
 
 
 
