@@ -4,6 +4,8 @@
 library(shiny)
 
 
+source("R/shinyModules.R")
+
 ui <- navbarPage(
 
   theme = shinythemes::shinytheme("cosmo"),

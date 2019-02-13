@@ -10,7 +10,7 @@ welcomePanelUI <- function(id){
 
     mainPanel(
 
-      includeHTML("../markdown/WELCOME.html")
+      includeHTML("markdown/WELCOME.html")
 
     )
 
@@ -43,6 +43,8 @@ plotsPanelUI <- function(id){
       mainPanel(
 
         tabsetPanel(
+
+          id = "plotPanel",
 
           type = "pills",
 
@@ -87,7 +89,7 @@ peoplePanelUI <- function(id){
 
     mainPanel(
 
-      includeHTML("../markdown/PEOPLE.html")
+      includeHTML("markdown/PEOPLE.html")
 
     )
 
@@ -121,13 +123,66 @@ plotPanelSideBar <- function(id){
 
   ns <- NS(id)
 
+  tagList(
 
-  conditionalPanel( F,
+    tsneSideBarUI(id),
 
-    selectizeInput(ns("META"), "Choose a Variable", LETTERS),
+    networkSideBarUI(id),
 
-    selectizeInput(ns("GENE"), "Choose a Gene", letters)
+    pseudotimeSideBarUI(id)
 
   )
 
 }
+
+
+tsneSideBarUI <- function(id){
+
+  conditionalPanel(
+
+    condition = "input.plotPanel == 'tSNE'",
+
+    geneChoiceUI(id),
+
+    metaChoiceUI(id),
+
+    helpText("tSNE Panel")
+
+  )
+
+}
+
+
+networkSideBarUI <- function(id){
+
+  conditionalPanel(
+
+    condition = "input.plotPanel == 'Network'",
+
+    geneChoiceUI(id),
+
+    metaChoiceUI(id),
+
+    helpText("Network Panel")
+
+  )
+
+}
+
+
+pseudotimeSideBarUI <- function(id){
+
+  conditionalPanel(
+
+    condition = "input.plotPanel == 'Pseudotime'",
+
+    geneChoiceUI(id),
+
+    metaChoiceUI(id),
+
+    helpText("Pseudotime Panel")
+
+  )
+
+}
+

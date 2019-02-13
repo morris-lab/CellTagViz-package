@@ -1,3 +1,5 @@
+^\./vizTest\.R$
+^\./R/vizTest\.R$
 ^markdown$
 ^images$
 ^scratch\.pad\.R$
