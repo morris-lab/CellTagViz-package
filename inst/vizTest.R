@@ -4,7 +4,7 @@
 library(shiny)
 
 
-source("R/shinyModules.R")
+source("./shinyModules.R")
 
 ui <- navbarPage(
 
