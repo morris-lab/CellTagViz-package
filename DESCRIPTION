@@ -13,5 +13,6 @@ LazyData: true
 Imports: 
     SingleCellExperiment,
     Matrix,
-    methods
+    methods,
+    shiny
 RoxygenNote: 6.1.1

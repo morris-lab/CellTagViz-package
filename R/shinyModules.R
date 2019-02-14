@@ -23,15 +23,15 @@
 
 welcomePanelUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  tabPanel(
+  shiny::tabPanel(
 
     title = "Welcome!",
 
-    mainPanel(
+    shiny::mainPanel(
 
-      includeHTML(path = "./markdown/WELCOME.html")
+      shiny::includeHTML(path = "./markdown/WELCOME.html")
 
     )
   )
@@ -59,39 +59,39 @@ welcomePanelUI <- function(id){
 
 plotsPanelUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  tabPanel(
+  shiny::tabPanel(
 
     title = "Plots",
 
-    sidebarLayout(
+    shiny::sidebarLayout(
 
           position = "left",
              fluid = TRUE,
-      sidebarPanel = sidebarPanel(
+      sidebarPanel = shiny::sidebarPanel(
 
         plotPanelSideBar(id)
 
       ),
 
-    mainPanel(
+    shiny::mainPanel(
 
-        tabsetPanel(
+        shiny::tabsetPanel(
 
             id = "plotPanel",
           type = "pills",
 
-          tabPanel("tSNE"),
-          tabPanel("Network"),
-          tabPanel("Pseudotime"),
-          tabPanel("Stacked Bar Charts"),
-          tabPanel("Scatter Plots"),
-          tabPanel("Meta Data")
+          shiny::tabPanel("tSNE"),
+          shiny::tabPanel("Network"),
+          shiny::tabPanel("Pseudotime"),
+          shiny::tabPanel("Stacked Bar Charts"),
+          shiny::tabPanel("Scatter Plots"),
+          shiny::tabPanel("Meta Data")
 
         ),
 
-        verbatimTextOutput("input_out")
+        shiny:: verbatimTextOutput("input_out")
 
       )
     )
@@ -105,13 +105,13 @@ plotsPanelUI <- function(id){
 
 dataPanelUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  tabPanel(
+  shiny::tabPanel(
 
     title = "Data",
 
-    mainPanel()
+    shiny::mainPanel()
 
   )
 }
@@ -123,15 +123,15 @@ dataPanelUI <- function(id){
 
 peoplePanelUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  tabPanel(
+  shiny::tabPanel(
 
     title = "People",
 
-    mainPanel(
+    shiny::mainPanel(
 
-      includeHTML("./markdown/PEOPLE.html")
+      shiny::includeHTML("./markdown/PEOPLE.html")
 
     )
   )
@@ -144,9 +144,9 @@ peoplePanelUI <- function(id){
 
 geneChoiceUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  selectizeInput(
+  shiny::selectizeInput(
 
       inputId = "GENE",
         label = "Choose a Gene",
@@ -164,9 +164,9 @@ geneChoiceUI <- function(id){
 
 metaChoiceUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  selectizeInput(
+  shiny::selectizeInput(
 
       inputId = "META",
         label = "Choose a Variable",
@@ -184,9 +184,9 @@ metaChoiceUI <- function(id){
 
 cloneChoiceUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  selectizeInput(
+  shiny::selectizeInput(
 
       inputId = "CLONES",
         label = "Choose a Clone",
@@ -204,9 +204,9 @@ cloneChoiceUI <- function(id){
 
 contourButtonUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  checkboxInput(
+  shiny::checkboxInput(
 
     inputId = "addContour",
       label = "Add Countour Lines",
@@ -222,9 +222,9 @@ contourButtonUI <- function(id){
 
 factorButtonUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  checkboxInput(
+  shiny::checkboxInput(
 
     inputId = "isFactor",
       label = "Is variable a factor?",
@@ -240,9 +240,9 @@ factorButtonUI <- function(id){
 
 plotDownloadUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  downloadButton(
+  shiny::downloadButton(
 
     outputId = "plotDownload",
        label = "Download Plot"
@@ -257,9 +257,9 @@ plotDownloadUI <- function(id){
 
 plotPanelSideBar <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  tagList(
+  shiny::tagList(
 
     tsneSideBarUI(id),
     networkSideBarUI(id),
@@ -279,16 +279,16 @@ plotPanelSideBar <- function(id){
 
 tsneSideBarUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  conditionalPanel(
+  shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'tSNE'",
     geneChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
     factorButtonUI(id),
-    helpText("tSNE Panel")
+    shiny::helpText("tSNE Panel")
 
   )
 }
@@ -300,15 +300,15 @@ tsneSideBarUI <- function(id){
 
 networkSideBarUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  conditionalPanel(
+  shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Network'",
     geneChoiceUI(id),
     metaChoiceUI(id),
     cloneChoiceUI(id),
-    helpText("Network Panel")
+    shiny::helpText("Network Panel")
 
   )
 }
@@ -320,16 +320,16 @@ networkSideBarUI <- function(id){
 
 pseudotimeSideBarUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  conditionalPanel(
+  shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Pseudotime'",
     geneChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
     factorButtonUI(id),
-    helpText("Pseudotime Panel")
+    shiny::helpText("Pseudotime Panel")
 
   )
 }
@@ -341,14 +341,14 @@ pseudotimeSideBarUI <- function(id){
 
 stackedSideBarUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  conditionalPanel(
+  shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Stacked Bar Charts'",
     geneChoiceUI(id),
     metaChoiceUI(id),
-    helpText("Stacked Bar Panel")
+    shiny::helpText("Stacked Bar Panel")
 
   )
 }
@@ -360,15 +360,15 @@ stackedSideBarUI <- function(id){
 
 scatterSideBarUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  conditionalPanel(
+  shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Scatter Plots'",
     geneChoiceUI(id),
     metaChoiceUI(id),
     factorButtonUI(id),
-    helpText("Scatter Chart Panel")
+    shiny::helpText("Scatter Chart Panel")
 
   )
 }
@@ -380,13 +380,13 @@ scatterSideBarUI <- function(id){
 
 metaSideBarUI <- function(id){
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  conditionalPanel(
+  shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Meta Data'",
     geneChoiceUI(id),
-    helpText("Meta Data Panel")
+    shiny::helpText("Meta Data Panel")
 
   )
 }
