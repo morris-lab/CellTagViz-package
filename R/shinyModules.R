@@ -103,6 +103,16 @@ plotsPanelUI <- function(id){
 # ==============================================================================
 
 
+#' Module which defines the Data panel.
+#'
+#' This module is used to define the UI of the data panel for CellTagViz.
+#' This panel will include the option to download the data used by the shiny
+#' app. This is also a good place to include links to thinkgs like GEO or the
+#' protocols.io webpage.
+#'
+#' @param id String which defines the namespace for the module
+#'
+
 dataPanelUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -119,6 +129,19 @@ dataPanelUI <- function(id){
 
 # ==============================================================================
 # ==============================================================================
+
+
+#' Module which defines the people panel.
+#'
+#' This module is used to define the UI of the people panel for CellTagViz.
+#' This panel includes the pictures of the Morris lab members. This is also a
+#' good place to include links to things like our lab webpage and twitter/github/
+#' social media profiles. This panel utilizes HTML files created using RStudio
+#' and R markdown documents. Making these HTML files stand alone will mean
+#' the photos do not need to be included with the package separately.
+#'
+#' @param id String which defines the namespace for the module
+#'
 
 
 peoplePanelUI <- function(id){
