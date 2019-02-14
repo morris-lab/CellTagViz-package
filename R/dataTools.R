@@ -339,11 +339,11 @@ addSeuratData <- function(sce, seurat) {
     colnames(seurat@meta.data) <- paste0(colnames(seurat@meta.data),
         ".Seurat")
 
-    sce@assays$data[["RawData.Seurat"]] <- makeDataMatrix(dat = seurat@raw.data,
+    sce@assays$data[["RawData.Seurat"]] <- makeDataMatrix(data2add= seurat@raw.data,
                                                       cellBCs = barcodeList,
                                                      features = featureList)
 
-    sce@assays$data[["ScaleData.Seurat"]] <- makeDataMatrix(dat = seurat@scale.data,
+    sce@assays$data[["ScaleData.Seurat"]] <- makeDataMatrix(data2add= seurat@scale.data,
                                                         cellBCs = barcodeList,
                                                        features = featureList)
 
@@ -407,7 +407,7 @@ addMonocleData <- function(sce, monocleObj) {
     sce@reducedDims@listData[["Pseudotime.Monocle"]] <- Matrix::Matrix(data = t(monocleObj@reducedDimS),
         sparse = TRUE)
 
-    sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(dat = monocleObj@assayData$exprs,
+    sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(data2add= monocleObj@assayData$exprs,
                                                       cellBCs = barcodeList,
                                                      features = featureList)
 
