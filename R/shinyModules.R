@@ -165,6 +165,17 @@ peoplePanelUI <- function(id){
 # ==============================================================================
 
 
+#' Module which defines feature selection choices for user input.
+#'
+#' This module is used to define the UI of the feature selection user input for
+#' CellTagViz. This module is a drop down selection box of the list of features
+#' present in the data being visualized. These features can then be visualized.
+#' This is a simple module which can be used in many situations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+
+
 geneChoiceUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -183,6 +194,17 @@ geneChoiceUI <- function(id){
 
 # ==============================================================================
 # ==============================================================================
+
+
+#' Module which defines meta data variable  selection choices for user input.
+#'
+#' This module is used to define the UI of the meta data selection user input
+#' for CellTagViz. This module is a drop down selection box of the list of
+#' meta data variables which can be visualized. This is a simple module which
+#' can be used in many situations.
+#'
+#' @param id String which defines the namespace for the module
+#'
 
 
 metaChoiceUI <- function(id){
@@ -205,6 +227,18 @@ metaChoiceUI <- function(id){
 # ==============================================================================
 
 
+#' Module which defines clone selection choices for user input.
+#'
+#' This module is used to define the UI of the clone selection user input for
+#' CellTagViz. This module is a drop down selection box of the list of clones
+#' present in the data being visualized. Using the selection from this input the
+#' data will be subset in order to only visualize the cells in the selected
+#' clones. This is a simple module which can be used in many situations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+
+
 cloneChoiceUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -225,6 +259,17 @@ cloneChoiceUI <- function(id){
 # ==============================================================================
 
 
+#' Module which defines a checkbox to add contour lines.
+#'
+#' This module is used to define the UI of the contour option checkbox for
+#' CellTagViz. This module is a checkbox which add contour lines to the current
+#' plot when ticked. This is a simple module which can be
+#' used for many visualizations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+
+
 contourButtonUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -243,6 +288,18 @@ contourButtonUI <- function(id){
 # ==============================================================================
 
 
+#' Module which defines a checkbox to consider meta data variables as factors.
+#'
+#' This module is used to define the UI of the factor option checkbox for
+#' CellTagViz. This module is a checkbox which when ticked will consider the
+#' given meta data variable as a factor. In turn the variable is considered
+#' categorical and treated as such. This is a simple module which can be
+#' used for many visualizations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+
+
 factorButtonUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -250,7 +307,7 @@ factorButtonUI <- function(id){
   shiny::checkboxInput(
 
     inputId = "isFactor",
-      label = "Is variable a factor?",
+      label = "Is meta data categorical?",
       value = FALSE
 
   )
