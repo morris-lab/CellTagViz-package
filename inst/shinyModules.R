@@ -6,6 +6,20 @@
 # ==============================================================================
 
 
+#' Module for Welcome page of CellTag Viz
+#'
+#' This is a UI module for use with the CellTagViz shiny app.
+#' The function includes an HTML file constructed using RStudio and R Markdown
+#' files. This module is useful for manipulating and changing the welcome page
+#' for the CellTagViz app. This function can also be replaced to change the
+#' Welcome page. In the past there has been issues with including HTML files
+#' as there were conflicts with other functionalities. But if there are no
+#' issues including HTML files I feel they are probably the best to use as the
+#' HTML files themselves can be rendered as stand alone documents.
+#'
+#' @param id String passed to module to identify the namespace of the module.
+#'
+
 welcomePanelUI <- function(id){
 
   ns <- NS(id)
