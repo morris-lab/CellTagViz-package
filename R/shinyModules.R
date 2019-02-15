@@ -20,6 +20,8 @@
 #'
 #' @param id String passed to module to identify the namespace of the module.
 #'
+#' @return Returns a shiny UI element
+#'
 
 welcomePanelUI <- function(id){
 
@@ -54,6 +56,8 @@ welcomePanelUI <- function(id){
 #' New plots can easily be added this way.
 #'
 #' @param id String which defines the namespace of the module.
+#'
+#' @return Returns a shiny UI element
 #'
 
 
@@ -112,6 +116,8 @@ plotsPanelUI <- function(id){
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @return Returns a shiny UI element
+#'
 
 dataPanelUI <- function(id){
 
@@ -135,12 +141,14 @@ dataPanelUI <- function(id){
 #'
 #' This module is used to define the UI of the people panel for CellTagViz.
 #' This panel includes the pictures of the Morris lab members. This is also a
-#' good place to include links to things like our lab webpage and twitter/github/
-#' social media profiles. This panel utilizes HTML files created using RStudio
-#' and R markdown documents. Making these HTML files stand alone will mean
-#' the photos do not need to be included with the package separately.
+#' good place to include links to things like our lab webpage and twitter/
+#' github/ social media profiles. This panel utilizes HTML files created using
+#' RStudio and R markdown documents. Making these HTML files stand alone will
+#' mean the photos do not need to be included with the package separately.
 #'
 #' @param id String which defines the namespace for the module
+#'
+#' @return Returns a shiny UI element
 #'
 
 
@@ -174,9 +182,11 @@ peoplePanelUI <- function(id){
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @return Returns a shiny UI element
+#'
 
 
-geneChoiceUI <- function(id){
+featureChoiceUI <- function(id){
 
   ns <- shiny::NS(id)
 
@@ -204,6 +214,8 @@ geneChoiceUI <- function(id){
 #' can be used in many situations.
 #'
 #' @param id String which defines the namespace for the module
+#'
+#' @return Returns a shiny UI element
 #'
 
 
@@ -237,6 +249,8 @@ metaChoiceUI <- function(id){
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @return Returns a shiny UI element
+#'
 
 
 cloneChoiceUI <- function(id){
@@ -268,6 +282,8 @@ cloneChoiceUI <- function(id){
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @return Returns a shiny UI element
+#'
 
 
 contourButtonUI <- function(id){
@@ -298,6 +314,8 @@ contourButtonUI <- function(id){
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @return Returns a shiny UI element
+#'
 
 
 factorButtonUI <- function(id){
@@ -318,6 +336,22 @@ factorButtonUI <- function(id){
 # ==============================================================================
 
 
+#' Module which defines a button to download the current plot as a PDF.
+#'
+#' This module is used to define the UI of the plot download button for
+#' CellTagViz. This module is a button which when clicked will download and save
+#' the current plot for the user. Slight differences in the downloaded plot and
+#' the plot produced by CellTagViz might occur. This is due to the CellTagViz
+#' interactive plot being rendered via plotly while the downloaded plot is
+#' rendered with ggplot2. This is a simple module which can be used to download
+#' many visualizations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a shiny UI element
+#'
+
+
 plotDownloadUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -333,6 +367,29 @@ plotDownloadUI <- function(id){
 
 # ==============================================================================
 # ==============================================================================
+
+
+#' Module which defines the sidebar of the Plot Panel.
+#'
+#' This module is used to define the UI of the Plot Panel sidebar for
+#' CellTagViz. This module is a taglist which contains calls to multiple other
+#' modules. The function calls this module makes define conditional sidebar
+#' layouts for each of the tabs in the tabset on the Plot Panel. By defining
+#' multiple sidebar layouts with the function calls allows each tab to have a
+#' unique sidebar. This module also calls the function \code{plotDownloadUI}
+#' this was done in this module as I could not produce proper formatting when
+#' placing the module call inside the modules which define the conditional
+#' sidebars. Furthermore, because the option to download plots is available for
+#' each of the plots the download button is not neccesarrily conditional. This
+#' makes it possible to call the module \code{plotDownload} in this module and
+#' generate the desired layout. Sidebars for new plot tabs can be easily added
+#' by creating a new module defining the sidebar and placing the function call
+#' in this module.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a shiny UI element
+#'
 
 
 plotPanelSideBar <- function(id){
@@ -357,6 +414,28 @@ plotPanelSideBar <- function(id){
 # ==============================================================================
 
 
+#' This module defines the UI element for the tSNE panel Sidebar.
+#'
+#' This module defines a conditional panel which is displayed when the tSNE plot
+#' panel is displayed. It makes calls to modules which allow the user to choose
+#' a meta data variable to color the plot, choose a feature to visualize the
+#' expression, add contour lines to the plot, and ensure categorical variables
+#' are treated as such. The module also defines help text which is rendered in
+#' the panel. This is used to ensure the correct sidebars are displayed on the
+#' correct panels and is only used during testing. Importantly this panel is
+#' set to display only in the correct circumstances. This sidebar will only be
+#' displayed when \code{input$plotPanel} is equal to "tSNE". This module can be
+#' easily modified to define new sidebar panels for new plots.
+#'
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a Shiny UI element
+#'
+#'
+
+
+
 tsneSideBarUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -364,7 +443,7 @@ tsneSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'tSNE'",
-    geneChoiceUI(id),
+    featureChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
     factorButtonUI(id),
@@ -378,6 +457,25 @@ tsneSideBarUI <- function(id){
 # ==============================================================================
 
 
+#' This module defines the UI element for the Network panel Sidebar.
+#'
+#' This module defines a conditional panel which is displayed when the Network
+#' plot panel is displayed. It makes calls to modules which allow the user to
+#' choose a meta data variable to color the plot, choose a feature to visualize
+#' the expression, and choose clones to visualize. The module also defines help
+#' text which is rendered in the panel. This is used to ensure the correct
+#' sidebars are displayed on the correct panels and is only used during testing.
+#' Importantly this panel is set to display only in the correct circumstances.
+#' This sidebar will only be displayed when \code{input$plotPanel} is equal to
+#' "Network". This module can be easily modified to define new sidebar panels
+#' for new plots.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a Shiny UI element
+#'
+
+
 networkSideBarUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -385,7 +483,7 @@ networkSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Network'",
-    geneChoiceUI(id),
+    featureChoiceUI(id),
     metaChoiceUI(id),
     cloneChoiceUI(id),
     shiny::helpText("Network Panel")
@@ -398,6 +496,26 @@ networkSideBarUI <- function(id){
 # ==============================================================================
 
 
+#' This module defines the UI element for the Pseudotime plot panel Sidebar.
+#'
+#' This module defines a conditional panel which is displayed when the
+#' Pseudotime plot panel is displayed. It makes calls to modules which allow the
+#' user to choose a meta data variable to color the plot, choose a feature to
+#' visualize the expression, add contour lines to the plot, and ensure
+#' categorical variables are treated as such. The module also defines help text
+#' which is rendered in the panel. This is used to ensure the correct sidebars
+#' are displayed on the correct panels and is only used during testing.
+#' Importantly this panel is set to display only in the correct circumstances.
+#' This sidebar will only be displayed when \code{input$plotPanel} is equal to
+#' "Pseudotime". This module can be easily modified to define new sidebar panels
+#' for new plots.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a Shiny UI element
+#'
+
+
 pseudotimeSideBarUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -405,7 +523,7 @@ pseudotimeSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Pseudotime'",
-    geneChoiceUI(id),
+    featureChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
     factorButtonUI(id),
@@ -419,6 +537,24 @@ pseudotimeSideBarUI <- function(id){
 # ==============================================================================
 
 
+#' This module defines the UI element for the Stacked Bar Chart panel Sidebar.
+#'
+#' This module defines a conditional panel which is displayed when the Stacked
+#' bar chart plot panel is displayed. It makes calls to modules which allow the
+#' user to choose a meta data variable to color the plot, choose a feature to
+#' visualize the expression. The module also defines help text which is rendered
+#' in the panel. This is used to ensure the correct sidebars are displayed on
+#' the correct panels and is only used during testing. Importantly this panel is
+#' set to display only in the correct circumstances. This sidebar will only be
+#' displayed when \code{input$plotPanel} is equal to "Stacked Bar Charts". This
+#' module can be easily modified to define new sidebar panels for new plots.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a Shiny UI element
+#'
+
+
 stackedSideBarUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -426,7 +562,7 @@ stackedSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Stacked Bar Charts'",
-    geneChoiceUI(id),
+    featureChoiceUI(id),
     metaChoiceUI(id),
     shiny::helpText("Stacked Bar Panel")
 
@@ -438,6 +574,25 @@ stackedSideBarUI <- function(id){
 # ==============================================================================
 
 
+#' This module defines the UI element for the Scatter Chart panel Sidebar.
+#'
+#' This module defines a conditional panel which is displayed when the Scatter
+#' chart plot panel is displayed. It makes calls to modules which allow the
+#' user to choose a meta data variable to color the plot, choose a feature to
+#' visualize the expression, and ensure categorical variables are treated as
+#' such. The module also defines help text which is rendered in the panel. This
+#' is used to ensure the correct sidebars are displayed on the correct panels
+#' and is only used during testing. Importantly this panel is set to display
+#' only in the correct circumstances. This sidebar will only be displayed when
+#' \code{input$plotPanel} is equal to "Scatter Plots". This module can be
+#' easily modified to define new sidebar panels for new plots.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a Shiny UI element
+#'
+
+
 scatterSideBarUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -445,7 +600,7 @@ scatterSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Scatter Plots'",
-    geneChoiceUI(id),
+    featureChoiceUI(id),
     metaChoiceUI(id),
     factorButtonUI(id),
     shiny::helpText("Scatter Chart Panel")
@@ -458,6 +613,24 @@ scatterSideBarUI <- function(id){
 # ==============================================================================
 
 
+#' This module defines the UI element for the Meta Data panel Sidebar.
+#'
+#' This module defines a conditional panel which is displayed when the Meta Data
+#' panel is displayed. It makes calls to modules which allow the user to choose
+#' a feature to visualize the expression of. The module also defines help text
+#' which is rendered in the panel. This is used to ensure the correct sidebars
+#' are displayed on the correct panels and is only used during testing.
+#' Importantly this panel is set to display only in the correct circumstances.
+#' This sidebar will only be displayed when \code{input$plotPanel} is equal to
+#' "Meta Data". This module can be easily modified to define new sidebar panels
+#' for new plots.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a Shiny UI element
+#'
+
+
 metaSideBarUI <- function(id){
 
   ns <- shiny::NS(id)
@@ -465,11 +638,8 @@ metaSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plotPanel == 'Meta Data'",
-    geneChoiceUI(id),
+    featureChoiceUI(id),
     shiny::helpText("Meta Data Panel")
 
   )
 }
-
-
-

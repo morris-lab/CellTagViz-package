@@ -9,6 +9,9 @@ metaChoiceUI(id)
 \arguments{
 \item{id}{String which defines the namespace for the module}
 }
+\value{
+Returns a shiny UI element
+}
 \description{
 This module is used to define the UI of the meta data selection user input
 for CellTagViz. This module is a drop down selection box of the list of

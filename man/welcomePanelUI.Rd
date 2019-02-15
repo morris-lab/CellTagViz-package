@@ -9,6 +9,9 @@ welcomePanelUI(id)
 \arguments{
 \item{id}{String passed to module to identify the namespace of the module.}
 }
+\value{
+Returns a shiny UI element
+}
 \description{
 This is a UI module for use with the CellTagViz shiny app.
 The function includes an HTML file constructed using RStudio and R Markdown

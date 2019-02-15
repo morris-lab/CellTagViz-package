@@ -9,11 +9,14 @@ peoplePanelUI(id)
 \arguments{
 \item{id}{String which defines the namespace for the module}
 }
+\value{
+Returns a shiny UI element
+}
 \description{
 This module is used to define the UI of the people panel for CellTagViz.
 This panel includes the pictures of the Morris lab members. This is also a
-good place to include links to things like our lab webpage and twitter/github/
-social media profiles. This panel utilizes HTML files created using RStudio
-and R markdown documents. Making these HTML files stand alone will mean
-the photos do not need to be included with the package separately.
+good place to include links to things like our lab webpage and twitter/
+github/ social media profiles. This panel utilizes HTML files created using
+RStudio and R markdown documents. Making these HTML files stand alone will
+mean the photos do not need to be included with the package separately.
 }

@@ -9,6 +9,9 @@ plotsPanelUI(id)
 \arguments{
 \item{id}{String which defines the namespace of the module.}
 }
+\value{
+Returns a shiny UI element
+}
 \description{
 This is a shiny UI module that defines the layout of the plots panel of the
 navbar menu. For the sidebar of this panel layout the module calls the

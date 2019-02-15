@@ -9,6 +9,9 @@ factorButtonUI(id)
 \arguments{
 \item{id}{String which defines the namespace for the module}
 }
+\value{
+Returns a shiny UI element
+}
 \description{
 This module is used to define the UI of the factor option checkbox for
 CellTagViz. This module is a checkbox which when ticked will consider the
