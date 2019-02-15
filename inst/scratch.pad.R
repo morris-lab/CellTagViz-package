@@ -6,11 +6,13 @@ library(SingleCellExperiment)
 
 library(Seurat)
 
-source(file = "~/working/CellTagViz/R/dataTools.R")
+dataTools <- "../working.Viz/R/dataTools.R"
 
-monoclePath <- "~/Desktop/unsupervised timeline all data.RDS"
+source(file = dataTools)
 
-seuratPath <- "~/Desktop/Warner_CCA_after_TSNE.RDS"
+monoclePath <- "../../../Desktop/unsupervised timeline all data.RDS"
+
+seuratPath <- "../../../Desktop/Warner_CCA_after_TSNE.RDS"
 
 monocleCDS <- readRDS(monoclePath)
 
@@ -60,8 +62,14 @@ generatePlotData <- function(sce, metaData, geneChoice, redMethod){
 
 allData <- plyr::join(plotData, metaData)
 
-ggplot(data = allData) + geom_point(aes(x = ACC1, y = ACC2, color = State.Monocle))
+ggplot(data = allData) + geom_point(aes(x = ACC1, y = ACC2, color = as.factor(State.Monocle)))
 
+
+nba <- ggplot(data = allData) + geom_point(aes(x = ACC1, y = ACC2, color = as.factor(State.Monocle)))
+
+plotly::ggplotly(nba)
+
+plotly::orca(nba, file = "cca.test.svg", format = "svg")
 
 
 
