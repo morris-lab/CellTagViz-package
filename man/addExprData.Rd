@@ -39,6 +39,6 @@ sce <- SingleCellExperiment::SingleCellExperiment()
 
 counts <- matrix(rnorm(100), 10, 10)
 
-sce <- addExprData(sce, counts, "Counts")
+sce <- CellTagViz:::addExprData(sce, counts, "Counts")
 
 }
