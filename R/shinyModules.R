@@ -33,7 +33,7 @@ welcomePanelUI <- function(id){
 
     shiny::mainPanel(
 
-      shiny::includeHTML(path = "./markdown/WELCOME.html")
+      shiny::includeHTML(path = "inst/markdown/WELCOME.html")
 
     )
   )
@@ -83,7 +83,7 @@ plotsPanelUI <- function(id){
 
         shiny::tabsetPanel(
 
-            id = "plotPanel",
+            id = id,
           type = "pills",
 
           shiny::tabPanel("tSNE"),
@@ -95,9 +95,13 @@ plotsPanelUI <- function(id){
 
         ),
 
-        shiny:: verbatimTextOutput("input_out")
+      tagList(
 
-      )
+        plotOutput(ns("testPlot")),
+        verbatimTextOutput(ns("inputOut"))
+
+        )
+    )
     )
   )
 }
@@ -162,7 +166,7 @@ peoplePanelUI <- function(id){
 
     shiny::mainPanel(
 
-      shiny::includeHTML("./markdown/PEOPLE.html")
+      shiny::includeHTML("inst/markdown/PEOPLE.html")
 
     )
   )
@@ -192,11 +196,10 @@ featureChoiceUI <- function(id){
 
   shiny::selectizeInput(
 
-      inputId = "GENE",
+      inputId = ns("GENE"),
         label = "Choose a Gene",
-      choices = letters,
-    #selectize = FALSE,
-     selected = "Apoa1"
+      choices = letters
+     #selected = "Apoa1"
 
   )
 }
@@ -225,11 +228,10 @@ metaChoiceUI <- function(id){
 
   shiny::selectizeInput(
 
-      inputId = "META",
+      inputId = ns("META"),
         label = "Choose a Variable",
-      choices = LETTERS,
-    #selectize = FALSE,
-     selected = "State.Monocle"
+      choices = LETTERS
+     #selected = "State.Monocle"
 
   )
 }
@@ -259,10 +261,9 @@ cloneChoiceUI <- function(id){
 
   shiny::selectizeInput(
 
-      inputId = "CLONES",
+      inputId = ns("CLONES"),
         label = "Choose a Clone",
       choices = LETTERS,
-    #selectize = TRUE,
      selected = NULL
 
   )
@@ -292,7 +293,7 @@ contourButtonUI <- function(id){
 
   shiny::checkboxInput(
 
-    inputId = "addContour",
+    inputId = ns("addContour"),
       label = "Add Countour Lines",
       value = FALSE
 
@@ -324,7 +325,7 @@ factorButtonUI <- function(id){
 
   shiny::checkboxInput(
 
-    inputId = "isFactor",
+    inputId = ns("isFactor"),
       label = "Is meta data categorical?",
       value = FALSE
 
@@ -358,7 +359,7 @@ plotDownloadUI <- function(id){
 
   shiny::downloadButton(
 
-    outputId = "plotDownload",
+    outputId = ns("plotDownload"),
        label = "Download Plot"
 
   )
@@ -398,13 +399,13 @@ plotPanelSideBar <- function(id){
 
   shiny::tagList(
 
-    tsneSideBarUI(id),
-    networkSideBarUI(id),
-    pseudotimeSideBarUI(id),
-    scatterSideBarUI(id),
-    stackedSideBarUI(id),
-    metaSideBarUI(id),
-    plotDownloadUI(id)
+    tsneSideBarUI("TSNE"),
+    networkSideBarUI("NETWORK"),
+    pseudotimeSideBarUI("PSEUDO"),
+    scatterSideBarUI("SCATTER"),
+    stackedSideBarUI("BARCHART"),
+    metaSideBarUI("METAVAR"),
+    plotDownloadUI("DOWNLOAD")
 
   )
 }
@@ -442,7 +443,7 @@ tsneSideBarUI <- function(id){
 
   shiny::conditionalPanel(
 
-    condition = "input.plotPanel == 'tSNE'",
+    condition = "input.plots == 'tSNE'",
     featureChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
@@ -482,7 +483,7 @@ networkSideBarUI <- function(id){
 
   shiny::conditionalPanel(
 
-    condition = "input.plotPanel == 'Network'",
+    condition = "input.plots == 'Network'",
     featureChoiceUI(id),
     metaChoiceUI(id),
     cloneChoiceUI(id),
@@ -522,7 +523,7 @@ pseudotimeSideBarUI <- function(id){
 
   shiny::conditionalPanel(
 
-    condition = "input.plotPanel == 'Pseudotime'",
+    condition = "input.plots == 'Pseudotime'",
     featureChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
@@ -561,7 +562,7 @@ stackedSideBarUI <- function(id){
 
   shiny::conditionalPanel(
 
-    condition = "input.plotPanel == 'Stacked Bar Charts'",
+    condition = "input.plots == 'Stacked Bar Charts'",
     featureChoiceUI(id),
     metaChoiceUI(id),
     shiny::helpText("Stacked Bar Panel")
@@ -599,7 +600,7 @@ scatterSideBarUI <- function(id){
 
   shiny::conditionalPanel(
 
-    condition = "input.plotPanel == 'Scatter Plots'",
+    condition = "input.plots == 'Scatter Plots'",
     featureChoiceUI(id),
     metaChoiceUI(id),
     factorButtonUI(id),
@@ -637,7 +638,7 @@ metaSideBarUI <- function(id){
 
   shiny::conditionalPanel(
 
-    condition = "input.plotPanel == 'Meta Data'",
+    condition = "input.plots == 'Meta Data'",
     featureChoiceUI(id),
     shiny::helpText("Meta Data Panel")
 
