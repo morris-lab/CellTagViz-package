@@ -26,10 +26,8 @@
 #'                                           nrow = 10,
 #'                                           ncol = 10)
 #'
-#' cellEmbeddings <- getEmbeddings(sce, "tSNE")
+#' cellEmbeddings <- CellTagViz:::getEmbeddings(sce, "tSNE")
 #'
-#'
-#' @export
 
 getEmbeddings <- function(sce, redMethod, cells = FALSE){
 
@@ -64,9 +62,8 @@ getEmbeddings <- function(sce, redMethod, cells = FALSE){
 #'
 #' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
 #'
-#' letters <- getMetaData(sce, "Letters")
+#' letters <- CellTagViz:::getMetaData(sce, "Letters")
 #'
-#' @export
 
 getMetaData <- function(sce, varName, cells = FALSE){
 
@@ -114,9 +111,8 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #'
 #' sce@@reducedDims@@listData$tSNE <- tSNE.embeddings
 #'
-#' plotData <- makePlotData(sce, "tSNE", "Letters")
+#' plotData <- CellTagViz:::makePlotData(sce, "tSNE", "Letters")
 #'
-#' @export
 
 makePlotData <- function(sce, redMethod, metaVar, cells = FALSE){
 

@@ -35,7 +35,6 @@ sce@reducedDims@listData$tSNE <- matrix(data = rnorm(100),
                                           nrow = 10,
                                           ncol = 10)
 
-cellEmbeddings <- getEmbeddings(sce, "tSNE")
-
+cellEmbeddings <- CellTagViz:::getEmbeddings(sce, "tSNE")
 
 }

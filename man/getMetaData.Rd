@@ -27,6 +27,6 @@ metaData <- sample(letters, 15)
 
 sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
 
-letters <- getMetaData(sce, "Letters")
+letters <- CellTagViz:::getMetaData(sce, "Letters")
 
 }

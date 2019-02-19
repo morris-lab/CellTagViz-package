@@ -39,6 +39,6 @@ sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaD
 
 sce@reducedDims@listData$tSNE <- tSNE.embeddings
 
-plotData <- makePlotData(sce, "tSNE", "Letters")
+plotData <- CellTagViz:::makePlotData(sce, "tSNE", "Letters")
 
 }
