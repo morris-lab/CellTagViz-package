@@ -4,7 +4,11 @@
 library(shiny)
 
 
-source("./shinyModules.R")
+
+
+source("R/shinyModules.R")
+
+source("R/shinyModulesServer.R")
 
 ui <- navbarPage(
 
@@ -19,14 +23,23 @@ ui <- navbarPage(
 )
 
 
-server <- function(input, output){
+server <- function(input, output, session){
 
-  output$input_out <- renderPrint({
+  userInput <- reactive({
 
-    str(sapply(names(input), function(id){input[[id]]}, simplify = FALSE))
+    return(input)
 
   })
+
+  #callModule(plotOpts, id = "plots", brent = choices)
+
+  callModule(createPlot, id = "plots", plotOptions = userInput())
+
 }
 
 
+
+
 shinyApp(ui = ui, server = server)
+
+
