@@ -10,4 +10,6 @@ devtools::install_github(
 
 vizFile <- system.file("vizTest.R", package = "CellTagViz")
 
+vizFile <- "inst/vizTest.R"
+
 shiny::shinyAppFile(appFile = vizFile)
