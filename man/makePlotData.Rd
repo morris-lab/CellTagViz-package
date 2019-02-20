@@ -4,7 +4,7 @@
 \alias{makePlotData}
 \title{Generates ggplot2 compatible data frames.}
 \usage{
-makePlotData(sce, redMethod, metaVar, cells = FALSE)
+makePlotData(sce, redMethod, metaVar, feature, cells = FALSE)
 }
 \arguments{
 \item{sce}{SingleCellExperiment Object}

@@ -45,17 +45,17 @@ createPlot <- function(input, output, session, plotOptions){
 
     switch(plotOpts$plots,
 
-      "tSNE" = easyPlot(main = "tSNE"),
+      "tSNE" = plotTsne(sce = sce, metaVar = plotOpts$`TSNE-META`, factor = plotOpts$`TSNE-isFactor`, contour = plotOpts$`TSNE-addContour`, feature = plotOpts$`TSNE-GENE`),
 
-      "Network" = easyPlot(main = "Network"),
+      "Network" = plotNetwork(sce = cars),
 
-      "Pseudotime" = easyPlot(main = "Pseudotime"),
+      "Pseudotime" = plotPseudotime(sce = sce, metaVar = plotOpts$`PSEUDO-META`, factor = plotOpts$`PSEUDO-isFactor`, contour = plotOpts$`PSEUDO-addContour`, feature = plotOpts$`PSEUDO-GENE`),
 
-      "Stacked Bar Charts" = easyPlot(main = "Stacked Bar Charts"),
+      "Stacked Bar Charts" = plotStackedBar(sce = cars),
 
-      "Scatter Plots" = easyPlot(main = "Scatter Plots"),
+      "Scatter Plots" = plotScatter(sce = cars),
 
-      "Meta Data" = easyPlot(main = "Meta Data")
+      "Meta Data" = plotMeta(sce = cars)
 
       )
   })
@@ -70,6 +70,153 @@ easyPlot <- function(...){
   return(p)
 
 }
+
+
+plotTsne <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+
+  plotData <- CellTagViz:::makePlotData(sce = sce, redMethod = "tsne.Seurat", metaVar = metaVar, feature = feature)
+
+  if(factor){
+
+    plotData[[metaVar]] <- as.factor(plotData[[metaVar]])
+
+  }
+
+  if(isTruthy(feature)){
+
+    b <- ggplot2::ggplot(data = plotData) + geom_point(aes_(x = ~tSNE_1, y = ~tSNE_2, color = as.name(feature))) + viridis::scale_color_viridis()
+
+  } else{
+
+    b <- ggplot2::ggplot(data = plotData) + geom_point(aes_(x = ~tSNE_1, y = ~tSNE_2, color = as.name(metaVar)))
+
+  }
+
+  br <- b + labs(title = "tSNE") + theme_classic()
+
+  if(contour){
+
+    datCols <- grep(pattern = "tsne", x = colnames(plotData), ignore.case = TRUE, value = TRUE)
+
+    bre <- br + plotContour(plotData = plotData, metaVar = metaVar, dataCols = datCols)
+
+    return(bre)
+
+  }
+
+  return(br)
+
+}
+
+
+plotNetwork <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+
+  b <- ggplot2::ggplot(data = sce) + geom_point(aes(x = sce[[1]], y = sce[[2]]))
+
+  br <- b + labs(title = "Network") + theme_classic()
+
+  return(br)
+
+}
+
+
+plotPseudotime <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+
+  plotData <- CellTagViz:::makePlotData(sce = sce, redMethod = "Pseudotime.Monocle", metaVar = metaVar, feature = feature)
+
+  if(factor){
+
+    plotData[[metaVar]] <- as.factor(plotData[[metaVar]])
+
+  }
+
+  if(isTruthy(feature)){
+
+    b <- ggplot2::ggplot(data = plotData) + geom_point(aes_(x = ~Component.1, y = ~Component.2, color = as.name(feature))) + viridis::scale_color_viridis()
+
+  } else{
+
+    b <- ggplot2::ggplot(data = plotData) + geom_point(aes_(x = ~Component.1, y = ~Component.2, color = as.name(metaVar)))
+
+  }
+
+  br <- b + labs(title = "Pseudotime") + theme_classic()
+
+  if(contour){
+
+    x <- grep(pattern = "1", x = colnames(plotData), ignore.case = TRUE, value = TRUE)
+
+    y <- grep(pattern = "2", x = colnames(plotData), ignore.case = TRUE, value = TRUE)
+
+    datCols <- c(x, y)
+
+    bre <- br + plotContour(plotData = plotData, metaVar = metaVar, dataCols = datCols)
+
+    return(bre)
+
+  }
+
+  return(br)
+
+}
+
+
+
+plotStackedBar <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+
+  b <- ggplot2::ggplot(data = sce) + geom_point(aes(x = sce[[1]], y = sce[[2]]))
+
+  br <- b + labs(title = "Stacked Bar Charts") + theme_classic()
+
+  return(br)
+
+}
+
+
+
+plotScatter <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+
+  b <- ggplot2::ggplot(data = sce) + geom_point(aes(x = sce[[1]], y = sce[[2]]))
+
+  br <- b + labs(title = "Scatter Plots") + theme_classic()
+
+  return(br)
+
+}
+
+
+
+plotMeta <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+
+  b <- ggplot2::ggplot(data = sce) + geom_point(aes(x = sce[[1]], y = sce[[2]]))
+
+  br <- b + labs(title = "Meta Data") + theme_classic()
+
+  return(br)
+
+}
+
+
+plotContour <- function(plotData, metaVar, dataCols){
+
+  dimX <- dataCols[[1]]
+
+  dimY <- dataCols[[2]]
+
+  contourLayer <- stat_density2d(data = plotData, aes_(x = as.name(dimX), y = as.name(dimY), color = as.name(metaVar)))
+
+}
+
+
+
+addExprToPlot <- function(plotData, feature, exprAssay){
+
+  plotData[[feature]] <- assay(sce, exprAssay)[feature, ]
+
+  return(plotData)
+
+}
+
 
 
 

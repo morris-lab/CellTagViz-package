@@ -198,8 +198,7 @@ featureChoiceUI <- function(id){
 
       inputId = ns("GENE"),
         label = "Choose a Gene",
-      choices = letters
-     #selected = "Apoa1"
+      choices = c(Choose = "", rownames(sce))
 
   )
 }
@@ -230,8 +229,8 @@ metaChoiceUI <- function(id){
 
       inputId = ns("META"),
         label = "Choose a Variable",
-      choices = LETTERS
-     #selected = "State.Monocle"
+      choices = names(SingleCellExperiment::colData(sce)),
+     selected = "State.Monocle"
 
   )
 }

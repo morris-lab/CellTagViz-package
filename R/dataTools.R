@@ -402,9 +402,23 @@ addMonocleData <- function(sce, monocleObj) {
     barcodeList <- colnames(sce)
 
     featureList <- rownames(sce)
+#
+#     sce@reducedDims@listData[["Pseudotime.Monocle"]] <- Matrix::Matrix(data = t(monocleObj@reducedDimS),
+#         sparse = TRUE)
 
-    sce@reducedDims@listData[["Pseudotime.Monocle"]] <- Matrix::Matrix(data = t(monocleObj@reducedDimS),
-        sparse = TRUE)
+    pseudoDims <- t(monocleObj@reducedDimS)
+
+    missingBCs <- barcodeList[!barcodeList %in% rownames(pseudoDims)]
+
+    missingDat <- matrix(data = 0, nrow = length(missingBCs), ncol = 2)
+
+    rownames(missingDat) <- missingBCs
+
+    pseudoAdd <- rbind(pseudoDims, missingDat)
+
+    colnames(pseudoAdd) <- c("Component.1", "Component.2")
+
+    sce@reducedDims@listData[["Pseudotime.Monocle"]] <- pseudoAdd
 
     sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(data2add= monocleObj@assayData$exprs,
                                                       cellBCs = barcodeList,

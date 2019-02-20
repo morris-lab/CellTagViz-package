@@ -114,18 +114,50 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #' plotData <- CellTagViz:::makePlotData(sce, "tSNE", "Letters")
 #'
 
-makePlotData <- function(sce, redMethod, metaVar, cells = FALSE){
+makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE){
 
-  embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
+  embeddings <- CellTagViz:::getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
 
   embeddings <- methods::as(embeddings[,1:2], "DataFrame")
 
-  metaData <- getMetaData(sce = sce, varName = metaVar, cells = cells)
+  metaData <- CellTagViz:::getMetaData(sce = sce, varName = metaVar, cells = cells)
 
   plotData <- merge(embeddings, metaData, by = "row.names")
 
   plotData <- as.data.frame(plotData)
 
+  if(isTruthy(feature)){
+
+    plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
+
+  }
+
   return(plotData)
 
 }
+
+
+addFeatureExpr <- function(plotData, feature, redMethod){
+
+  if(grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)){
+
+    exprData <- assay(sce, "ScaleData.Seurat")[feature, ]
+
+  } else if(grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)){
+
+    exprData <- assay(sce, "Counts.Monocle")[feature, ]
+
+  }
+
+  exprData <- as.data.frame(exprData)
+
+  rownames(plotData) <- plotData$Row.names
+
+  plotData[[feature]] <- 0
+
+  plotData[rownames(exprData), feature] <- exprData[rownames(exprData), 1]
+
+  return(plotData)
+
+}
+
