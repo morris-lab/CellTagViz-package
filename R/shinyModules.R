@@ -225,13 +225,33 @@ metaChoiceUI <- function(id){
 
   ns <- shiny::NS(id)
 
-  shiny::selectizeInput(
+  if(id == "BARCHART-GROUP"){
 
-      inputId = ns("META"),
+    return(
+
+      shiny::selectizeInput(
+
+        inputId = ns("META"),
         label = "Choose a Variable",
-      choices = names(SingleCellExperiment::colData(sce)),
-     selected = "State.Monocle"
+        choices = names(SingleCellExperiment::colData(sce)),
+        selected = "res.0.6.Seurat"
 
+      )
+    )
+
+  } else (
+
+    return(
+
+      shiny::selectizeInput(
+
+        inputId = ns("META"),
+        label = "Choose a Variable",
+        choices = names(SingleCellExperiment::colData(sce)),
+        selected = "State.Monocle"
+
+      )
+    )
   )
 }
 
@@ -562,8 +582,9 @@ stackedSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plots == 'Stacked Bar Charts'",
-    featureChoiceUI(id),
+    metaChoiceUI("BARCHART-GROUP"),
     metaChoiceUI(id),
+    horizontalButtonUI(id),
     shiny::helpText("Stacked Bar Panel")
 
   )
@@ -640,6 +661,34 @@ metaSideBarUI <- function(id){
     condition = "input.plots == 'Meta Data'",
     featureChoiceUI(id),
     shiny::helpText("Meta Data Panel")
+
+  )
+}
+
+
+#' Module which defines a checkbox to make stacked bar charts horizontal.
+#'
+#' This module is used to define the UI of the factor option checkbox for
+#' CellTagViz. This module is a checkbox which when ticked will consider the
+#' given meta data variable as a factor. In turn the variable is considered
+#' categorical and treated as such. This is a simple module which can be
+#' used for many visualizations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a shiny UI element
+#'
+
+
+horizontalButtonUI <- function(id){
+
+  ns <- shiny::NS(id)
+
+  shiny::checkboxInput(
+
+    inputId = ns("plotFlip"),
+    label = "Horizontal Plot",
+    value = FALSE
 
   )
 }

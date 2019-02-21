@@ -51,7 +51,7 @@ createPlot <- function(input, output, session, plotOptions){
 
       "Pseudotime" = plotPseudotime(sce = sce, metaVar = plotOpts$`PSEUDO-META`, factor = plotOpts$`PSEUDO-isFactor`, contour = plotOpts$`PSEUDO-addContour`, feature = plotOpts$`PSEUDO-GENE`),
 
-      "Stacked Bar Charts" = plotStackedBar(sce = cars),
+      "Stacked Bar Charts" = plotStackedBar(sce = sce, colorVar = plotOpts$`BARCHART-GROUP-META`, groupVar = plotOpts$`BARCHART-META`, horizontal = plotOpts$`BARCHART-plotFlip`),
 
       "Scatter Plots" = plotScatter(sce = cars),
 
@@ -162,11 +162,21 @@ plotPseudotime <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE
 
 
 
-plotStackedBar <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+plotStackedBar <- function(sce, groupVar = FALSE, colorVar = FALSE, clones = FALSE, horizontal = FALSE){
 
-  b <- ggplot2::ggplot(data = sce) + geom_point(aes(x = sce[[1]], y = sce[[2]]))
+  plotData <- CellTagViz:::makePlotData(sce = sce, redMethod = FALSE)
 
-  br <- b + labs(title = "Stacked Bar Charts") + theme_classic()
+  b <- ggplot2::ggplot(data = plotData) + geom_bar(aes_(x = as.name(groupVar), fill = as.name(colorVar)), position = "fill", na.rm = TRUE) + scale_y_continuous(labels = scales::percent)
+
+  if(isTruthy(horizontal)){
+
+    br <- b + labs(title = "Stacked Bar Charts") + theme_classic() + coord_flip()
+
+  } else(
+
+    br <- b + labs(title = "Stacked Bar Charts") + theme_classic()
+
+  )
 
   return(br)
 

@@ -116,6 +116,16 @@ getMetaData <- function(sce, varName, cells = FALSE){
 
 makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE){
 
+  if(!isTruthy(redMethod)){
+
+    plotData <- colData(sce)
+
+    plotData <- as.data.frame(plotData)
+
+    return(plotData)
+
+  }
+
   embeddings <- CellTagViz:::getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
 
   embeddings <- methods::as(embeddings[,1:2], "DataFrame")
