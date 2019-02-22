@@ -94,6 +94,8 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #'
 #' @param metaVar String Name of the column to return from meta/col Data.
 #'
+#' @param feature String Name of a feature to return from assay data.
+#'
 #' @param cells Character Vector of Cell Barcodes used to subset data.
 #'
 #' @return This function returns a data frame which can be used to plot and color
@@ -103,9 +105,9 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #'
 #' metaData <- sample(letters, 15)
 #'
-#' tSNE.embeddings <- matrix(data = rnorm(100),
+#' tSNE.embeddings <- matrix(data = rnorm(250),
 #'                           nrow = 25,
-#'                           ncol = 15)
+#'                           ncol = 10)
 #'
 #' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
 #'
@@ -116,7 +118,7 @@ getMetaData <- function(sce, varName, cells = FALSE){
 
 makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE){
 
-  if(!isTruthy(redMethod)){
+  if(!shiny::isTruthy(redMethod)){
 
     plotData <- colData(sce)
 
@@ -136,7 +138,7 @@ makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE
 
   plotData <- as.data.frame(plotData)
 
-  if(isTruthy(feature)){
+  if(shiny::isTruthy(feature)){
 
     plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
 

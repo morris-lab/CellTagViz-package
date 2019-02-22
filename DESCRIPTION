@@ -14,5 +14,8 @@ Imports:
     SingleCellExperiment,
     Matrix,
     methods,
-    shiny
+    shiny,
+    ggplot2,
+    viridis,
+    scales
 RoxygenNote: 6.1.1

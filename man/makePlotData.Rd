@@ -4,7 +4,7 @@
 \alias{makePlotData}
 \title{Generates ggplot2 compatible data frames.}
 \usage{
-makePlotData(sce, redMethod, metaVar, feature, cells = FALSE)
+makePlotData(sce, redMethod, metaVar, feature = FALSE, cells = FALSE)
 }
 \arguments{
 \item{sce}{SingleCellExperiment Object}
@@ -12,6 +12,8 @@ makePlotData(sce, redMethod, metaVar, feature, cells = FALSE)
 \item{redMethod}{String Name of the dimension reduction method to visualize.}
 
 \item{metaVar}{String Name of the column to return from meta/col Data.}
+
+\item{feature}{String Name of a feature to return from assay data.}
 
 \item{cells}{Character Vector of Cell Barcodes used to subset data.}
 }
@@ -31,9 +33,9 @@ the given meta data which can then be used for grouping and coloring purposes.
 
 metaData <- sample(letters, 15)
 
-tSNE.embeddings <- matrix(data = rnorm(100),
+tSNE.embeddings <- matrix(data = rnorm(250),
                           nrow = 25,
-                          ncol = 15)
+                          ncol = 10)
 
 sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
 
