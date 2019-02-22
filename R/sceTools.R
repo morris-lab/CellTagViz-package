@@ -124,6 +124,14 @@ makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE
 
     plotData <- as.data.frame(plotData)
 
+    if(shiny::isTruthy(feature)){
+
+      plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = "seurat")
+
+      return(plotData)
+
+    }
+
     return(plotData)
 
   }
@@ -137,6 +145,8 @@ makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE
   plotData <- merge(embeddings, metaData, by = "row.names")
 
   plotData <- as.data.frame(plotData)
+
+  rownames(plotData) <- plotData$Row.names
 
   if(shiny::isTruthy(feature)){
 
@@ -162,8 +172,6 @@ addFeatureExpr <- function(plotData, feature, redMethod){
   }
 
   exprData <- as.data.frame(exprData)
-
-  rownames(plotData) <- plotData$Row.names
 
   plotData[[feature]] <- 0
 

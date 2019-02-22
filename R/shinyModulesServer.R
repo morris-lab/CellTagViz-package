@@ -53,7 +53,7 @@ createPlot <- function(input, output, session, plotOptions){
 
       "Stacked Bar Charts" = plotStackedBar(sce = sce, colorVar = plotOpts$`BARCHART-GROUP-META`, groupVar = plotOpts$`BARCHART-META`, horizontal = plotOpts$`BARCHART-plotFlip`),
 
-      "Scatter Plots" = plotScatter(sce = cars),
+      "Scatter Plots" = plotScatter(sce = sce, metaVar = plotOpts$`SCATTER-META`, feature = plotOpts$`SCATTER-GENE`, factor = plotOpts$`SCATTER-isFactor`),
 
       "Meta Data" = plotMeta(sce = cars)
 
@@ -184,9 +184,20 @@ plotStackedBar <- function(sce, groupVar = FALSE, colorVar = FALSE, clones = FAL
 
 
 
-plotScatter <- function(sce, feature = FALSE, metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
+plotScatter <- function(sce, feature = "Apoa1", metaVar = FALSE, clones = FALSE, factor = FALSE, contour = FALSE){
 
-  b <- ggplot2::ggplot(data = sce) + geom_point(aes(x = sce[[1]], y = sce[[2]]))
+  plotData <- CellTagViz:::makePlotData(sce = sce, feature = feature, metaVar = metaVar, redMethod = FALSE)
+
+  if(shiny::isTruthy(factor)){
+
+    plotData[[metaVar]] <- as.factor(plotData[[metaVar]])
+
+    b <- ggplot2::ggplot(data = plotData) + geom_violin(aes_(x = as.name(metaVar), y = as.name(feature), fill = as.name(metaVar)), na.rm = TRUE)
+
+  } else(
+
+    b <- ggplot2::ggplot(data = plotData) + geom_point(aes_(x = as.name(metaVar), y = as.name(feature)), na.rm = TRUE)
+  )
 
   br <- b + labs(title = "Scatter Plots") + theme_classic()
 
