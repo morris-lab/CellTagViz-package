@@ -463,6 +463,7 @@ tsneSideBarUI <- function(id){
   shiny::conditionalPanel(
 
     condition = "input.plots == 'tSNE'",
+    reductionChoiceUI(id),
     featureChoiceUI(id),
     metaChoiceUI(id),
     contourButtonUI(id),
@@ -691,4 +692,18 @@ horizontalButtonUI <- function(id){
     value = FALSE
 
   )
+}
+
+
+reductionChoiceUI <- function(id){
+
+  ns <- shiny::NS(id)
+
+  shiny::selectizeInput(
+
+    inputId = ns("REDUCTION"),
+    label = "Choose a dimension reduction method",
+    choices = SingleCellExperiment::reducedDimNames(sce)
+  )
+
 }
