@@ -20,25 +20,28 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' sce <- SingleCellExperiment::SingleCellExperiment()
 #'
-#' sce@@reducedDims@@listData$tSNE <- matrix(data = rnorm(100),
+#' reducedDims(sce, 'tSNE') <- matrix(data = rnorm(100),
 #'                                           nrow = 10,
 #'                                           ncol = 10)
 #'
-#' cellEmbeddings <- CellTagViz:::getEmbeddings(sce, "tSNE")
+#' cellEmbeddings <- getEmbeddings(sce, 'tSNE')
+#'}
 #'
 
-getEmbeddings <- function(sce, redMethod, cells = FALSE){
-
-  embeddings <- SingleCellExperiment::reducedDim(sce, redMethod)
-
-  if(cells){
-
-    embeddings <- embeddings[cells, ]
-  }
-
-  return(embeddings)
+getEmbeddings <- function(sce, redMethod, cells = FALSE) {
+    
+    embeddings <- SingleCellExperiment::reducedDim(sce, redMethod)
+    
+    if (cells) {
+        
+        embeddings <- embeddings[cells, ]
+    }
+    
+    return(embeddings)
 }
 
 
@@ -58,24 +61,29 @@ getEmbeddings <- function(sce, redMethod, cells = FALSE){
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' metaData <- sample(letters, 15)
 #'
-#' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
+#' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
+#'                                                   Letters = metaData))
 #'
-#' letters <- CellTagViz:::getMetaData(sce, "Letters")
+#' letters <- getMetaData(sce, 'Letters')
+#'
+#' }
 #'
 
-getMetaData <- function(sce, varName, cells = FALSE){
-
-  metaData <- SingleCellExperiment::colData(sce)[varName]
-
-  if(cells){
-
-    metaData <- metaData[cells, ]
-  }
-
-  return(metaData)
-
+getMetaData <- function(sce, varName, cells = FALSE) {
+    
+    metaData <- SingleCellExperiment::colData(sce)[varName]
+    
+    if (cells) {
+        
+        metaData <- metaData[cells, ]
+    }
+    
+    return(metaData)
+    
 }
 
 
@@ -86,7 +94,7 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #' \code{getMetaData}. The objects returned by both of these functions are
 #' then merged into one single data frame. This combined data frame contains the
 #' coordinates of each cell from the given dimension reduction method along with
-#' the given meta data which can then be used for grouping and coloring purposes.
+#' the given meta data which can then be used for grouping and coloring.
 #'
 #' @param sce SingleCellExperiment Object
 #'
@@ -98,10 +106,12 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #'
 #' @param cells Character Vector of Cell Barcodes used to subset data.
 #'
-#' @return This function returns a data frame which can be used to plot and color
-#' cells from an SCE object using ggplot2.
+#' @return This function returns a data frame which can be used to plot and
+#' color cells from an SCE object using ggplot2.
 #'
 #' @examples
+#'
+#' \dontrun{
 #'
 #' metaData <- sample(letters, 15)
 #'
@@ -109,75 +119,108 @@ getMetaData <- function(sce, varName, cells = FALSE){
 #'                           nrow = 25,
 #'                           ncol = 10)
 #'
-#' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
+#' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
+#'                                                   Letters = metaData))
 #'
-#' sce@@reducedDims@@listData$tSNE <- tSNE.embeddings
+#' reducedDim(sce, 'tSNE') <- tSNE.embeddings
 #'
-#' plotData <- CellTagViz:::makePlotData(sce, "tSNE", "Letters")
+#' plotData <- makePlotData(sce, 'tSNE', 'Letters')
+#'
+#'}
 #'
 
-makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE){
-
-  if(!shiny::isTruthy(redMethod)){
-
-    plotData <- colData(sce)
-
-    plotData <- as.data.frame(plotData)
-
-    if(shiny::isTruthy(feature)){
-
-      plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = "seurat")
-
-      return(plotData)
-
+makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE) {
+    
+    if (!shiny::isTruthy(redMethod)) {
+        
+        plotData <- SingleCellExperiment::colData(sce)
+        
+        plotData <- as.data.frame(plotData)
+        
+        if (shiny::isTruthy(feature)) {
+            
+            plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = "seurat")
+            
+            return(plotData)
+            
+        }
+        
+        return(plotData)
+        
     }
-
+    
+    embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
+    
+    embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
+    
+    metaData <- getMetaData(sce = sce, varName = metaVar, cells = cells)
+    
+    plotData <- merge(embeddings, metaData, by = "row.names")
+    
+    plotData <- as.data.frame(plotData)
+    
+    rownames(plotData) <- plotData$Row.names
+    
+    if (shiny::isTruthy(feature)) {
+        
+        plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
+        
+    }
+    
     return(plotData)
-
-  }
-
-  embeddings <- CellTagViz:::getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
-
-  embeddings <- methods::as(embeddings[,1:2], "DataFrame")
-
-  metaData <- CellTagViz:::getMetaData(sce = sce, varName = metaVar, cells = cells)
-
-  plotData <- merge(embeddings, metaData, by = "row.names")
-
-  plotData <- as.data.frame(plotData)
-
-  rownames(plotData) <- plotData$Row.names
-
-  if(shiny::isTruthy(feature)){
-
-    plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
-
-  }
-
-  return(plotData)
-
+    
 }
 
 
-addFeatureExpr <- function(plotData, feature, redMethod){
+#' Adds gene expression to plot data.
+#'
+#' \code{addFeatureExpr} is a function used to add the expression values
+#' for a chosen gene to be added to the data frame which contains all of the
+#' data needed to construct the plot.
+#'
+#' @param plotData Data Frame which contains the cell embeddings and meta data
+#' for the current plot.
+#'
+#' @param feature String of the gene name chosen by the user. Expression values
+#' for this gene will be added to the plotData data frame.
+#'
+#' @param redMethod String The current dimension reduction method being
+#' visualized. This value is used to determine which gene expression data to use.
+#'
+#' @return The function returns the given data frame with a column added which
+#' contains the expression values for the user chosen gene.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#'
+#' plotData <- makePlotData(blah, blah, blah)
+#'
+#' plotData <- addFeatureExpr(foo, bar, foo)
+#'
+#' }
+#'
 
-  if(grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)){
-
-    exprData <- assay(sce, "ScaleData.Seurat")[feature, ]
-
-  } else if(grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)){
-
-    exprData <- assay(sce, "Counts.Monocle")[feature, ]
-
-  }
-
-  exprData <- as.data.frame(exprData)
-
-  plotData[[feature]] <- 0
-
-  plotData[rownames(exprData), feature] <- exprData[rownames(exprData), 1]
-
-  return(plotData)
-
+addFeatureExpr <- function(plotData, feature, redMethod) {
+    
+    if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
+        
+        exprData <- SummarizedExperiment::assay(sce, "ScaleData.Seurat")[feature, ]
+        
+    } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
+        
+        exprData <- SummarizedExperiment::assay(sce, "Counts.Monocle")[feature, ]
+        
+    }
+    
+    exprData <- as.data.frame(exprData)
+    
+    plotData[[feature]] <- 0
+    
+    plotData[rownames(exprData), feature] <- exprData[rownames(exprData), 1]
+    
+    return(plotData)
+    
 }
 

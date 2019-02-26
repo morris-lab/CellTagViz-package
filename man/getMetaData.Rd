@@ -23,10 +23,15 @@ object \emph{sce} for the given vector of cells, \emph{cells}.
 }
 \examples{
 
+\dontrun{
+
 metaData <- sample(letters, 15)
 
-sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
+sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
+                                                  Letters = metaData))
 
-letters <- CellTagViz:::getMetaData(sce, "Letters")
+letters <- getMetaData(sce, "Letters")
+
+}
 
 }

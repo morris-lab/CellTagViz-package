@@ -35,10 +35,14 @@ expression matrix is then stored in the SCE object under the given name
 }
 \examples{
 
+\dontrun{
+
 sce <- SingleCellExperiment::SingleCellExperiment()
 
 counts <- matrix(rnorm(100), 10, 10)
 
-sce <- CellTagViz:::addExprData(sce, counts, "Counts")
+sce <- addExprData(sce, counts, "Counts")
+
+}
 
 }

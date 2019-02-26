@@ -18,8 +18,8 @@ makePlotData(sce, redMethod, metaVar, feature = FALSE, cells = FALSE)
 \item{cells}{Character Vector of Cell Barcodes used to subset data.}
 }
 \value{
-This function returns a data frame which can be used to plot and color
-cells from an SCE object using ggplot2.
+This function returns a data frame which can be used to plot and
+color cells from an SCE object using ggplot2.
 }
 \description{
 \code{makePlotData} creates data frames for use with ggplot2 visualizations.
@@ -27,9 +27,11 @@ This is accomplished by calling two functions \code{getEmbeddings} and
 \code{getMetaData}. The objects returned by both of these functions are
 then merged into one single data frame. This combined data frame contains the
 coordinates of each cell from the given dimension reduction method along with
-the given meta data which can then be used for grouping and coloring purposes.
+the given meta data which can then be used for grouping and coloring.
 }
 \examples{
+
+\dontrun{
 
 metaData <- sample(letters, 15)
 
@@ -37,10 +39,13 @@ tSNE.embeddings <- matrix(data = rnorm(250),
                           nrow = 25,
                           ncol = 10)
 
-sce <- SingleCellExperiment::SingleCellExperiment(colData = list(Letters = metaData))
+sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
+                                                  Letters = metaData))
 
-sce@reducedDims@listData$tSNE <- tSNE.embeddings
+reducedDim(sce, "tSNE") <- tSNE.embeddings
 
-plotData <- CellTagViz:::makePlotData(sce, "tSNE", "Letters")
+plotData <- makePlotData(sce, "tSNE", "Letters")
+
+}
 
 }

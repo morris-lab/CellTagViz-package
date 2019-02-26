@@ -1,12 +1,8 @@
 
-# ==============================================================================
-# This file contains functions which generate
-# SingleCellExperiment objects.  Currently, these functions
-# take in Seurat and Monocle objects and creates an object
-# which is compatible with the CellTagViz shiny app. This
-# contains expression data, and dimension reduction cell
-# embeddings to visualize the data in two dimensions.
-# ==============================================================================
+# ============================================================================== This file contains functions which generate
+# SingleCellExperiment objects.  Currently, these functions take in Seurat and Monocle objects and creates an object which
+# is compatible with the CellTagViz shiny app. This contains expression data, and dimension reduction cell embeddings to
+# visualize the data in two dimensions.  ==============================================================================
 
 
 
@@ -40,26 +36,23 @@
 #' @export
 
 makeVizData <- function(dataSets) {
-
+    
     names(dataSets) <- toupper(names(dataSets))
-
+    
     seuratObject <- dataSets[["SEURAT"]]
-
+    
     monocleObject <- dataSets[["MONOCLE"]]
-
-    cellBarcodes <- getCellBarcodes(seurat = seuratObject,
-                                   monocle = monocleObject)
-
-    featureList <- getFeatures(seurat = seuratObject,
-                              monocle = monocleObject)
-
-    sceObject <- initializeSCE(cellBCs = cellBarcodes,
-                              features = featureList)
-
+    
+    cellBarcodes <- getCellBarcodes(seurat = seuratObject, monocle = monocleObject)
+    
+    featureList <- getFeatures(seurat = seuratObject, monocle = monocleObject)
+    
+    sceObject <- initializeSCE(cellBCs = cellBarcodes, features = featureList)
+    
     sceObject <- addSeuratData(sceObject, seuratObject)
-
+    
     sceObject <- addMonocleData(sceObject, monocleObject)
-
+    
     return(sceObject)
 }
 
@@ -90,9 +83,9 @@ makeVizData <- function(dataSets) {
 #' @export
 
 getCellBarcodes <- function(seurat, monocle) {
-
+    
     barcodes <- union(seurat@cell.names, colnames(monocle))
-
+    
 }
 
 #' Returns character vector of Feature Names.
@@ -123,9 +116,9 @@ getCellBarcodes <- function(seurat, monocle) {
 
 
 getFeatures <- function(seurat, monocle) {
-
+    
     features <- union(rownames(seurat@scale.data), rownames(monocle))
-
+    
 }
 
 #' Initializes SCE object for Monocle and Seurat Data.
@@ -162,14 +155,13 @@ getFeatures <- function(seurat, monocle) {
 #' @export
 
 initializeSCE <- function(cellBCs, features) {
-
+    
     cellDF <- data.frame(row.names = cellBCs)
-
+    
     featureDF <- data.frame(row.names = features)
-
-    sce <- SingleCellExperiment::SingleCellExperiment(colData = cellDF,
-                                                      rowData = featureDF)
-
+    
+    sce <- SingleCellExperiment::SingleCellExperiment(colData = cellDF, rowData = featureDF)
+    
     return(sce)
 }
 
@@ -201,31 +193,35 @@ initializeSCE <- function(cellBCs, features) {
 #'
 #' @examples
 #'
+#' \dontrun{
+#'
 #' sce <- SingleCellExperiment::SingleCellExperiment()
 #'
 #' counts <- matrix(rnorm(100), 10, 10)
 #'
-#' sce <- CellTagViz:::addExprData(sce, counts, "Counts")
+#' sce <- addExprData(sce, counts, 'Counts')
+#'
+#'}
 #'
 
 addExprData <- function(sce, exprMat, datName) {
-
+    
     exprMat <- Matrix::Matrix(exprMat, sparse = TRUE)
-
+    
     missingGenes <- rownames(sce)[!rownames(sce) %in% rownames(exprMat)]
-
+    
     missingCells <- colnames(sce)[!colnames(sce) %in% colnames(exprMat)]
-
+    
     cellMat <- Matrix::Matrix(nrow = nrow(exprMat), ncol = length(missingCells))
-
+    
     geneMat <- Matrix::Matrix(nrow = length(missingGenes), ncol = ncol(exprMat))
-
+    
     exprMat <- cbind(exprMat, cellMat)
-
+    
     exprMat <- rbind(exprMat, geneMat)
-
+    
     sce@assays$data[[datName]] <- exprMat
-
+    
     return(sce)
 }
 
@@ -253,9 +249,9 @@ addExprData <- function(sce, exprMat, datName) {
 #'
 #' @examples
 #'
-#' barcodes <- c("BC1", "BC2")
+#' barcodes <- c('BC1', 'BC2')
 #'
-#' genes <- c("Apoa1", "Mettl7a1")
+#' genes <- c('Apoa1', 'Mettl7a1')
 #'
 #' exprMat <- matrix(rnorm(100), 3, 3)
 #'
@@ -264,33 +260,31 @@ addExprData <- function(sce, exprMat, datName) {
 #' @export
 
 makeDataMatrix <- function(data2add, cellBCs, features) {
-
+    
     data2add <- Matrix::Matrix(data2add, sparse = TRUE)
-
+    
     missingBCs <- cellBCs[!cellBCs %in% colnames(data2add)]
-
+    
     missingFeatures <- features[!features %in% rownames(data2add)]
-
+    
     if (length(missingBCs) > 0) {
-
-        bcMat <- Matrix::Matrix(nrow = nrow(data2add),
-                                ncol = length(missingBCs))
-
+        
+        bcMat <- Matrix::Matrix(nrow = nrow(data2add), ncol = length(missingBCs))
+        
         data2add <- base::cbind(data2add, bcMat)
-
+        
     }
-
+    
     if (length(missingFeatures) > 0) {
-
-        featureMat <- Matrix::Matrix(nrow = length(missingFeatures),
-                                     ncol = ncol(data2add))
-
+        
+        featureMat <- Matrix::Matrix(nrow = length(missingFeatures), ncol = ncol(data2add))
+        
         data2add <- base::rbind(data2add, featureMat)
-
+        
     }
-
+    
     return(data2add)
-
+    
 }
 
 #' Add Seurat object data to an SCE object
@@ -305,10 +299,10 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
 #' and features from both the monocle object and seurat object are represented.
 #' Furthermore, the meta data from the seurat object is added to the colData of
 #' the SCE object. Each variable name in the seurat meta data is given the
-#' suffix ".Seurat" to identify its origins once stored in the SCE object.
+#' suffix '.Seurat' to identify its origins once stored in the SCE object.
 #' The cell embeddings for each dimension reduction mehtod used in seurat are
 #' stored in the SCE object. Once again the names for each set of cell embeddings
-#' is suffixed with ".Seurat" to identify the origins of the embeddings.
+#' is suffixed with '.Seurat' to identify the origins of the embeddings.
 #'
 #' @param sce Single Cell Experiment Object used to store data
 #'
@@ -330,35 +324,29 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
 #' @export
 
 addSeuratData <- function(sce, seurat) {
-
+    
     barcodeList <- colnames(sce)
-
+    
     featureList <- rownames(sce)
-
-    colnames(seurat@meta.data) <- paste0(colnames(seurat@meta.data),
-        ".Seurat")
-
-    sce@assays$data[["RawData.Seurat"]] <- makeDataMatrix(data2add= seurat@raw.data,
-                                                      cellBCs = barcodeList,
-                                                     features = featureList)
-
-    sce@assays$data[["ScaleData.Seurat"]] <- makeDataMatrix(data2add= seurat@scale.data,
-                                                        cellBCs = barcodeList,
-                                                       features = featureList)
-
-    sce@colData[rownames(seurat@meta.data), colnames(seurat@meta.data)] <- seurat@meta.data[rownames(seurat@meta.data),
-        colnames(seurat@meta.data)]
-
+    
+    colnames(seurat@meta.data) <- paste0(colnames(seurat@meta.data), ".Seurat")
+    
+    sce@assays$data[["RawData.Seurat"]] <- makeDataMatrix(data2add = seurat@raw.data, cellBCs = barcodeList, features = featureList)
+    
+    sce@assays$data[["ScaleData.Seurat"]] <- makeDataMatrix(data2add = seurat@scale.data, cellBCs = barcodeList, features = featureList)
+    
+    sce@colData[rownames(seurat@meta.data), colnames(seurat@meta.data)] <- seurat@meta.data[rownames(seurat@meta.data), colnames(seurat@meta.data)]
+    
     cellEmbeddings <- lapply(names(seurat@dr), function(id) {
         seurat@dr[[id]]@cell.embeddings
     })
-
+    
     names(cellEmbeddings) <- paste0(names(seurat@dr), ".Seurat")
-
+    
     sce@reducedDims@listData <- cellEmbeddings
-
+    
     return(sce)
-
+    
 }
 
 
@@ -370,12 +358,12 @@ addSeuratData <- function(sce, seurat) {
 #' This function is the main function used to transfer data from a given
 #' monocle object into a given SCE object. The expression count data from the
 #' monocle object is added to the assays slot of the SCE object. Currently the
-#' only cell embeddings transferred from the monocle object are the "Pseudotime"
+#' only cell embeddings transferred from the monocle object are the 'Pseudotime'
 #' embeddings from the reducedDimS slot of the monocle object. If other dimension
 #' reduction methods were used they will not be included using this function.
 #' The meta data generated by monocle is added to the colData slot of the SCE
 #' object. Monocle also generates feature level meta data which is currently not
-#' transferred using this function. All names are suffixed with ".Monocle" before
+#' transferred using this function. All names are suffixed with '.Monocle' before
 #' being stored in the SCE object.
 #'
 #' @param sce Single Cell Experiment in which data will be stored
@@ -398,38 +386,33 @@ addSeuratData <- function(sce, seurat) {
 #' @export
 
 addMonocleData <- function(sce, monocleObj) {
-
+    
     barcodeList <- colnames(sce)
-
+    
     featureList <- rownames(sce)
-#
-#     sce@reducedDims@listData[["Pseudotime.Monocle"]] <- Matrix::Matrix(data = t(monocleObj@reducedDimS),
-#         sparse = TRUE)
-
+    # sce@reducedDims@listData[['Pseudotime.Monocle']] <- Matrix::Matrix(data = t(monocleObj@reducedDimS), sparse = TRUE)
+    
     pseudoDims <- t(monocleObj@reducedDimS)
-
+    
     missingBCs <- barcodeList[!barcodeList %in% rownames(pseudoDims)]
-
+    
     missingDat <- matrix(data = 0, nrow = length(missingBCs), ncol = 2)
-
+    
     rownames(missingDat) <- missingBCs
-
+    
     pseudoAdd <- rbind(pseudoDims, missingDat)
-
+    
     colnames(pseudoAdd) <- c("Component.1", "Component.2")
-
+    
     sce@reducedDims@listData[["Pseudotime.Monocle"]] <- pseudoAdd
-
-    sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(data2add= monocleObj@assayData$exprs,
-                                                      cellBCs = barcodeList,
-                                                     features = featureList)
-
-    names(monocleObj@phenoData@data) <- paste0(names(monocleObj@phenoData@data),
-        ".Monocle")
-
-    sce@colData[rownames(monocleObj@phenoData@data), colnames(monocleObj@phenoData@data)] <- monocleObj@phenoData@data[rownames(monocleObj@phenoData@data),
+    
+    sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(data2add = monocleObj@assayData$exprs, cellBCs = barcodeList, features = featureList)
+    
+    names(monocleObj@phenoData@data) <- paste0(names(monocleObj@phenoData@data), ".Monocle")
+    
+    sce@colData[rownames(monocleObj@phenoData@data), colnames(monocleObj@phenoData@data)] <- monocleObj@phenoData@data[rownames(monocleObj@phenoData@data), 
         colnames(monocleObj@phenoData@data)]
-
+    
     return(sce)
-
+    
 }

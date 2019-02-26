@@ -30,7 +30,6 @@ welcomePanelUI <- function(id){
   shiny::tabPanel(
 
     title = "Welcome!",
-
     shiny::mainPanel(
 
       shiny::includeHTML(path = "inst/markdown/WELCOME.html")
@@ -95,10 +94,10 @@ plotsPanelUI <- function(id){
 
         ),
 
-      tagList(
+      shiny::tagList(
 
-        plotOutput(ns("testPlot")),
-        verbatimTextOutput(ns("inputOut"))
+        shiny::plotOutput(ns("testPlot")),
+        shiny::verbatimTextOutput(ns("inputOut"))
 
         )
     )
@@ -693,6 +692,21 @@ horizontalButtonUI <- function(id){
 
   )
 }
+
+
+#' Module which defines a selection input for choosing a dimension reduction
+#' method.
+#'
+#' This module is used to define the UI of the dimension reduction selection
+#' input for CellTagViz. This module is a drop down list which allows ths user
+#' to choose which dimension reduction method to visualize. The choices for this
+#' list are the names of the datasets returned by \code{reducedDimNames}.
+#' This is a simple module which can be used for many visualizations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @return Returns a shiny UI element
+#'
 
 
 reductionChoiceUI <- function(id){

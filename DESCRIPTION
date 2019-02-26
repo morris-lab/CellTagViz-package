@@ -17,5 +17,6 @@ Imports:
     shiny,
     ggplot2,
     viridis,
-    scales
+    scales,
+    SummarizedExperiment
 RoxygenNote: 6.1.1

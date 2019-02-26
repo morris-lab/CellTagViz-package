@@ -29,12 +29,15 @@ combined with metadata to generate visualizations with ggplot2.
 }
 \examples{
 
+\dontrun{
+
 sce <- SingleCellExperiment::SingleCellExperiment()
 
-sce@reducedDims@listData$tSNE <- matrix(data = rnorm(100),
+reducedDims(sce, "tSNE") <- matrix(data = rnorm(100),
                                           nrow = 10,
                                           ncol = 10)
 
-cellEmbeddings <- CellTagViz:::getEmbeddings(sce, "tSNE")
+cellEmbeddings <- getEmbeddings(sce, "tSNE")
+}
 
 }
