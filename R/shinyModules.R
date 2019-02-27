@@ -31,8 +31,10 @@
 welcomePanelUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::tabPanel(title = "Welcome!",
-    shiny::mainPanel(shiny::includeHTML(path = "inst/markdown/WELCOME.html")))
+  shiny::tabPanel(
+    title = "Welcome!",
+    shiny::mainPanel(shiny::includeHTML(path = "inst/markdown/WELCOME.html"))
+  )
 }
 
 
@@ -83,8 +85,10 @@ plotsPanelUI <- function(id, inputData) {
           shiny::tabPanel("Meta Data")
         ),
 
-        shiny::tagList(shiny::plotOutput(ns("testPlot")),
-          shiny::verbatimTextOutput(ns("inputOut")))
+        shiny::tagList(
+          shiny::plotOutput(ns("testPlot")),
+          shiny::verbatimTextOutput(ns("inputOut"))
+        )
       )
     )
   )
@@ -112,9 +116,11 @@ plotsPanelUI <- function(id, inputData) {
 dataPanelUI <- function(id, inputData) {
   ns <- shiny::NS(id)
 
-  shiny::tabPanel(title = "Data",
+  shiny::tabPanel(
+    title = "Data",
 
-    shiny::mainPanel())
+    shiny::mainPanel()
+  )
 }
 
 
@@ -140,9 +146,11 @@ dataPanelUI <- function(id, inputData) {
 peoplePanelUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::tabPanel(title = "People",
+  shiny::tabPanel(
+    title = "People",
 
-    shiny::mainPanel(shiny::includeHTML("inst/markdown/PEOPLE.html")))
+    shiny::mainPanel(shiny::includeHTML("inst/markdown/PEOPLE.html"))
+  )
 }
 
 
@@ -270,9 +278,11 @@ cloneChoiceUI <- function(id) {
 contourButtonUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::checkboxInput(inputId = ns("addContour"),
+  shiny::checkboxInput(
+    inputId = ns("addContour"),
     label = "Add Countour Lines",
-    value = FALSE)
+    value = FALSE
+  )
 }
 
 
@@ -297,9 +307,11 @@ contourButtonUI <- function(id) {
 factorButtonUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::checkboxInput(inputId = ns("isFactor"),
+  shiny::checkboxInput(
+    inputId = ns("isFactor"),
     label = "Is meta data categorical?",
-    value = FALSE)
+    value = FALSE
+  )
 }
 
 
@@ -328,8 +340,10 @@ factorButtonUI <- function(id) {
 plotDownloadUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
-  shiny::downloadButton(outputId = ns("plotDownload"),
-    label = "Download Plot")
+  shiny::downloadButton(
+    outputId = ns("plotDownload"),
+    label = "Download Plot"
+  )
 }
 
 
@@ -625,9 +639,11 @@ metaSideBarUI <- function(id, inputSCE) {
 horizontalButtonUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::checkboxInput(inputId = ns("plotFlip"),
+  shiny::checkboxInput(
+    inputId = ns("plotFlip"),
     label = "Horizontal Plot",
-    value = FALSE)
+    value = FALSE
+  )
 }
 
 

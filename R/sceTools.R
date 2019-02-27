@@ -125,13 +125,12 @@ getMetaData <- function(sce, varName, cells = FALSE) {
 #' plotData <- makePlotData(sce, "tSNE", "Letters")
 #' }
 #'
-
 makePlotData <-
   function(sce,
-    redMethod,
-    metaVar,
-    feature = FALSE,
-    cells = FALSE) {
+             redMethod,
+             metaVar,
+             feature = FALSE,
+             cells = FALSE) {
     if (!shiny::isTruthy(redMethod)) {
       plotData <- SingleCellExperiment::colData(sce)
 
@@ -153,18 +152,22 @@ makePlotData <-
     }
 
     embeddings <-
-      getEmbeddings(sce = sce,
+      getEmbeddings(
+        sce = sce,
         redMethod = redMethod,
-        cells = cells)
+        cells = cells
+      )
 
     embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
 
     colnames(embeddings) <- c("Dim.1", "Dim.2")
 
     metaData <-
-      getMetaData(sce = sce,
+      getMetaData(
+        sce = sce,
         varName = metaVar,
-        cells = cells)
+        cells = cells
+      )
 
     plotData <- merge(embeddings, metaData, by = "row.names")
 
@@ -214,7 +217,6 @@ makePlotData <-
 #' plotData <- makePlotData(blah, blah, blah)
 #'
 #' plotData <- addFeatureExpr(foo, bar, foo)
-#'
 #' }
 #'
 addFeatureExpr <- function(plotData, feature, redMethod, inputSCE) {

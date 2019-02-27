@@ -164,8 +164,10 @@ initializeSCE <- function(cellBCs, features) {
   featureDF <- data.frame(row.names = features)
 
   sce <-
-    SingleCellExperiment::SingleCellExperiment(colData = cellDF,
-      rowData = featureDF)
+    SingleCellExperiment::SingleCellExperiment(
+      colData = cellDF,
+      rowData = featureDF
+    )
 
   return(sce)
 }
@@ -280,8 +282,10 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
 
   if (length(missingFeatures) > 0) {
     featureMat <-
-      Matrix::Matrix(nrow = length(missingFeatures),
-        ncol = ncol(data2add))
+      Matrix::Matrix(
+        nrow = length(missingFeatures),
+        ncol = ncol(data2add)
+      )
 
     data2add <- base::rbind(data2add, featureMat)
   }
@@ -406,9 +410,11 @@ addMonocleData <- function(sce, monocleObj) {
   missingBCs <- barcodeList[!barcodeList %in% rownames(pseudoDims)]
 
   missingDat <-
-    matrix(data = 0,
+    matrix(
+      data = 0,
       nrow = length(missingBCs),
-      ncol = 2)
+      ncol = 2
+    )
 
   rownames(missingDat) <- missingBCs
 
@@ -429,8 +435,10 @@ addMonocleData <- function(sce, monocleObj) {
     paste0(names(monocleObj@phenoData@data), ".Monocle")
 
   sce@colData[rownames(monocleObj@phenoData@data), colnames(monocleObj@phenoData@data)] <-
-    monocleObj@phenoData@data[rownames(monocleObj@phenoData@data),
-      colnames(monocleObj@phenoData@data)]
+    monocleObj@phenoData@data[
+      rownames(monocleObj@phenoData@data),
+      colnames(monocleObj@phenoData@data)
+    ]
 
   return(sce)
 }

@@ -32,10 +32,10 @@
 
 createPlot <-
   function(input,
-    output,
-    session,
-    plotOptions,
-    inputSCE) {
+             output,
+             session,
+             plotOptions,
+             inputSCE) {
     output$inputOut <- shiny::renderPrint({
       plotOpts <- shiny::reactiveValuesToList(plotOptions)
 
@@ -122,12 +122,12 @@ easyPlot <- function(...) {
 
 plotTsne <-
   function(sce,
-    feature = FALSE,
-    metaVar = FALSE,
-    clones = FALSE,
-    factor = FALSE,
-    contour = FALSE,
-    redMethod = FALSE) {
+             feature = FALSE,
+             metaVar = FALSE,
+             clones = FALSE,
+             factor = FALSE,
+             contour = FALSE,
+             redMethod = FALSE) {
     plotData <-
       makePlotData(
         sce = sce,
@@ -143,15 +143,15 @@ plotTsne <-
     if (shiny::isTruthy(feature)) {
       b <-
         ggplot2::ggplot(data = plotData) + ggplot2::geom_point(ggplot2::aes_(
-          x = ~ Dim.1,
-          y = ~ Dim.2,
+          x = ~Dim.1,
+          y = ~Dim.2,
           color = as.name(feature)
         )) + viridis::scale_color_viridis()
     } else {
       b <-
         ggplot2::ggplot(data = plotData) + ggplot2::geom_point(ggplot2::aes_(
-          x = ~ Dim.1,
-          y = ~ Dim.2,
+          x = ~Dim.1,
+          y = ~Dim.2,
           color = as.name(metaVar)
         ))
     }
@@ -169,9 +169,11 @@ plotTsne <-
         )
 
       bre <-
-        br + plotContour(plotData = plotData,
+        br + plotContour(
+          plotData = plotData,
           metaVar = metaVar,
-          dataCols = datCols)
+          dataCols = datCols
+        )
 
       return(bre)
     }
@@ -184,11 +186,11 @@ plotTsne <-
 
 plotNetwork <-
   function(sce,
-    feature = FALSE,
-    metaVar = FALSE,
-    clones = FALSE,
-    factor = FALSE,
-    contour = FALSE) {
+             feature = FALSE,
+             metaVar = FALSE,
+             clones = FALSE,
+             factor = FALSE,
+             contour = FALSE) {
     b <-
       ggplot2::ggplot(data = sce) + ggplot2::geom_point(ggplot2::aes(x = sce[[1]], y = sce[[2]]))
 
@@ -203,11 +205,11 @@ plotNetwork <-
 
 plotPseudotime <-
   function(sce,
-    feature = FALSE,
-    metaVar = FALSE,
-    clones = FALSE,
-    factor = FALSE,
-    contour = FALSE) {
+             feature = FALSE,
+             metaVar = FALSE,
+             clones = FALSE,
+             factor = FALSE,
+             contour = FALSE) {
     plotData <-
       makePlotData(
         sce = sce,
@@ -223,15 +225,15 @@ plotPseudotime <-
     if (shiny::isTruthy(feature)) {
       b <-
         ggplot2::ggplot(data = plotData) + ggplot2::geom_point(ggplot2::aes_(
-          x = ~ Component.1,
-          y = ~ Component.2,
+          x = ~Component.1,
+          y = ~Component.2,
           color = as.name(feature)
         )) + viridis::scale_color_viridis()
     } else {
       b <-
         ggplot2::ggplot(data = plotData) + ggplot2::geom_point(ggplot2::aes_(
-          x = ~ Component.1,
-          y = ~ Component.2,
+          x = ~Component.1,
+          y = ~Component.2,
           color = as.name(metaVar)
         ))
     }
@@ -259,9 +261,11 @@ plotPseudotime <-
       datCols <- c(x, y)
 
       bre <-
-        br + plotContour(plotData = plotData,
+        br + plotContour(
+          plotData = plotData,
           metaVar = metaVar,
-          dataCols = datCols)
+          dataCols = datCols
+        )
 
       return(bre)
     }
@@ -274,23 +278,24 @@ plotPseudotime <-
 
 plotStackedBar <-
   function(sce,
-    groupVar = FALSE,
-    colorVar = FALSE,
-    clones = FALSE,
-    horizontal = FALSE) {
+             groupVar = FALSE,
+             colorVar = FALSE,
+             clones = FALSE,
+             horizontal = FALSE) {
     plotData <- makePlotData(sce = sce, redMethod = FALSE)
 
     b <-
       ggplot2::ggplot(data = plotData) + ggplot2::geom_bar(ggplot2::aes_(x = as.name(groupVar), fill = as.name(colorVar)),
         position = "fill",
-        na.rm = TRUE) + ggplot2::scale_y_continuous(labels = scales::percent)
+        na.rm = TRUE
+      ) + ggplot2::scale_y_continuous(labels = scales::percent)
 
     if (shiny::isTruthy(horizontal)) {
       br <-
         b + ggplot2::labs(title = "Stacked Bar Charts") + ggplot2::theme_classic() + ggplot2::coord_flip()
     } else {
       (br <-
-          b + ggplot2::labs(title = "Stacked Bar Charts") + ggplot2::theme_classic())
+        b + ggplot2::labs(title = "Stacked Bar Charts") + ggplot2::theme_classic())
     }
 
     return(br)
@@ -301,11 +306,11 @@ plotStackedBar <-
 
 plotScatter <-
   function(sce,
-    feature = "Apoa1",
-    metaVar = FALSE,
-    clones = FALSE,
-    factor = FALSE,
-    contour = FALSE) {
+             feature = "Apoa1",
+             metaVar = FALSE,
+             clones = FALSE,
+             factor = FALSE,
+             contour = FALSE) {
     plotData <-
       makePlotData(
         sce = sce,
@@ -323,7 +328,8 @@ plotScatter <-
           y = as.name(feature),
           fill = as.name(metaVar)
         ),
-          na.rm = TRUE)
+        na.rm = TRUE
+        )
     } else {
       (
         b <-
@@ -344,11 +350,11 @@ plotScatter <-
 
 plotMeta <-
   function(sce,
-    feature = FALSE,
-    metaVar = FALSE,
-    clones = FALSE,
-    factor = FALSE,
-    contour = FALSE) {
+             feature = FALSE,
+             metaVar = FALSE,
+             clones = FALSE,
+             factor = FALSE,
+             contour = FALSE) {
     b <-
       ggplot2::ggplot(data = sce) + ggplot2::geom_point(ggplot2::aes(x = sce[[1]], y = sce[[2]]))
 
@@ -367,10 +373,12 @@ plotContour <- function(plotData, metaVar, dataCols) {
   dimY <- dataCols[[2]]
 
   contourLayer <-
-    ggplot2::stat_density2d(data = plotData,
+    ggplot2::stat_density2d(
+      data = plotData,
       ggplot2::aes_(
         x = as.name(dimX),
         y = as.name(dimY),
         color = as.name(metaVar)
-      ))
+      )
+    )
 }
