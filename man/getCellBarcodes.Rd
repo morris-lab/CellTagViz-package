@@ -29,7 +29,6 @@ of the cell barcodes in both the Monocle and Seurat objects.
 \dontrun{
 
 cellBCs <- getCellBarcodes(seuratObj, monocleObj)
-
 }
 
 }

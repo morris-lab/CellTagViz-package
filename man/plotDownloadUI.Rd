@@ -4,10 +4,12 @@
 \alias{plotDownloadUI}
 \title{Module which defines a button to download the current plot as a PDF.}
 \usage{
-plotDownloadUI(id)
+plotDownloadUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

@@ -28,10 +28,10 @@ object \emph{sce} for the given vector of cells, \emph{cells}.
 metaData <- sample(letters, 15)
 
 sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
-                                                  Letters = metaData))
+  Letters = metaData
+))
 
 letters <- getMetaData(sce, "Letters")
-
 }
 
 }

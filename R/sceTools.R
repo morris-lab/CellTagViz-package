@@ -139,9 +139,12 @@ makePlotData <-
 
       if (shiny::isTruthy(feature)) {
         plotData <-
-          addFeatureExpr(plotData = plotData,
+          addFeatureExpr(
+            plotData = plotData,
             feature = feature,
-            redMethod = "seurat")
+            redMethod = "seurat",
+            inputSCE = sce
+          )
 
         return(plotData)
       }
@@ -156,6 +159,8 @@ makePlotData <-
 
     embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
 
+    colnames(embeddings) <- c("Dim.1", "Dim.2")
+
     metaData <-
       getMetaData(sce = sce,
         varName = metaVar,
@@ -169,9 +174,12 @@ makePlotData <-
 
     if (shiny::isTruthy(feature)) {
       plotData <-
-        addFeatureExpr(plotData = plotData,
+        addFeatureExpr(
+          plotData = plotData,
           feature = feature,
-          redMethod = redMethod)
+          redMethod = redMethod,
+          inputSCE = sce
+        )
     }
 
     return(plotData)
@@ -193,6 +201,8 @@ makePlotData <-
 #' @param redMethod String The current dimension reduction method being
 #' visualized. This value is used to determine which gene expression data to use.
 #'
+#' @param inputSCE SingleCellExperiment object which contains data being used.
+#'
 #' @return The function returns the given data frame with a column added which
 #' contains the expression values for the user chosen gene.
 #'
@@ -204,15 +214,16 @@ makePlotData <-
 #' plotData <- makePlotData(blah, blah, blah)
 #'
 #' plotData <- addFeatureExpr(foo, bar, foo)
+#'
 #' }
 #'
-addFeatureExpr <- function(plotData, feature, redMethod) {
+addFeatureExpr <- function(plotData, feature, redMethod, inputSCE) {
   if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
     exprData <-
-      SummarizedExperiment::assay(sce, "ScaleData.Seurat")[feature, ]
+      SummarizedExperiment::assay(inputSCE, "ScaleData.Seurat")[feature, ]
   } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
     exprData <-
-      SummarizedExperiment::assay(sce, "Counts.Monocle")[feature, ]
+      SummarizedExperiment::assay(inputSCE, "Counts.Monocle")[feature, ]
   }
 
   exprData <- as.data.frame(exprData)

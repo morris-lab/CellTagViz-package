@@ -4,7 +4,7 @@
 \alias{createPlot}
 \title{This is a shiny server function for generating CellTagViz plots.}
 \usage{
-createPlot(input, output, session, plotOptions)
+createPlot(input, output, session, plotOptions, inputSCE)
 }
 \arguments{
 \item{input}{Default argument required for shiny modules.}
@@ -14,6 +14,8 @@ createPlot(input, output, session, plotOptions)
 \item{session}{Default argument required for shiny modules.}
 
 \item{plotOptions}{List which contains the user input values.}
+
+\item{inputSCE}{Single Cell Experiment Object which contains the data to plot.}
 }
 \value{
 Returns plots based on user input values and current tab selection.

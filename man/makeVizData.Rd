@@ -32,7 +32,6 @@ performed with Seurat and Monocle.
 dataSets <- list(seurat = seuratObj, monocle = monocleObj)
 
 sce <- makeVizData(dataSets)
-
 }
 
 }

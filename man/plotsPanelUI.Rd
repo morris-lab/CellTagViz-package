@@ -4,10 +4,12 @@
 \alias{plotsPanelUI}
 \title{Module for plots panel of CellTagViz}
 \usage{
-plotsPanelUI(id)
+plotsPanelUI(id, inputData)
 }
 \arguments{
 \item{id}{String which defines the namespace of the module.}
+
+\item{inputData}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

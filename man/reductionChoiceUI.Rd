@@ -5,10 +5,12 @@
 \title{Module which defines a selection input for choosing a dimension reduction
 method.}
 \usage{
-reductionChoiceUI(id)
+reductionChoiceUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

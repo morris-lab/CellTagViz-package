@@ -4,10 +4,12 @@
 \alias{tsneSideBarUI}
 \title{This module defines the UI element for the tSNE panel Sidebar.}
 \usage{
-tsneSideBarUI(id)
+tsneSideBarUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a Shiny UI element

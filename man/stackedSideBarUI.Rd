@@ -4,10 +4,12 @@
 \alias{stackedSideBarUI}
 \title{This module defines the UI element for the Stacked Bar Chart panel Sidebar.}
 \usage{
-stackedSideBarUI(id)
+stackedSideBarUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a Shiny UI element

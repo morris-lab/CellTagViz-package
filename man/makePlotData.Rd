@@ -35,17 +35,19 @@ the given meta data which can then be used for grouping and coloring.
 
 metaData <- sample(letters, 15)
 
-tSNE.embeddings <- matrix(data = rnorm(250),
-                          nrow = 25,
-                          ncol = 10)
+tSNE.embeddings <- matrix(
+  data = rnorm(250),
+  nrow = 25,
+  ncol = 10
+)
 
 sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
-                                                  Letters = metaData))
+  Letters = metaData
+))
 
 reducedDim(sce, "tSNE") <- tSNE.embeddings
 
 plotData <- makePlotData(sce, "tSNE", "Letters")
-
 }
 
 }

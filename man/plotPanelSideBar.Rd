@@ -4,10 +4,12 @@
 \alias{plotPanelSideBar}
 \title{Module which defines the sidebar of the Plot Panel.}
 \usage{
-plotPanelSideBar(id)
+plotPanelSideBar(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

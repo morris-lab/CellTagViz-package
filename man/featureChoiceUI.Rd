@@ -4,10 +4,12 @@
 \alias{featureChoiceUI}
 \title{Module which defines feature selection choices for user input.}
 \usage{
-featureChoiceUI(id)
+featureChoiceUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

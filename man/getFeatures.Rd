@@ -29,7 +29,6 @@ of the feature names present in both the Monocle and Seurat objects.
 \dontrun{
 
 featureList <- getFeatures(seuratObj, monocleObj)
-
 }
 
 }

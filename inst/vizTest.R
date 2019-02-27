@@ -44,8 +44,8 @@ ui <- navbarPage(
   title = "CellTagViz",
 
   welcomePanelUI("welcome"),
-  plotsPanelUI("plots"),
-  dataPanelUI("data"),
+  plotsPanelUI("plots", inputData = sce),
+  dataPanelUI("data", inputData = sce),
   peoplePanelUI("people")
 
 )
@@ -59,9 +59,7 @@ server <- function(input, output, session){
 
   }) %>% debounce(2000)
 
-  #callModule(plotOpts, id = "plots", brent = choices)
-
-  callModule(createPlot, id = "plots", plotOptions = userInput())
+  callModule(createPlot, id = "plots", plotOptions = userInput(), inputSCE = sce)
 
 }
 

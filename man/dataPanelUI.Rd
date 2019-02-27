@@ -4,10 +4,12 @@
 \alias{dataPanelUI}
 \title{Module which defines the Data panel.}
 \usage{
-dataPanelUI(id)
+dataPanelUI(id, inputData)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputData}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

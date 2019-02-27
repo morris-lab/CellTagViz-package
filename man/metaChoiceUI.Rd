@@ -4,10 +4,12 @@
 \alias{metaChoiceUI}
 \title{Module which defines meta data variable  selection choices for user input.}
 \usage{
-metaChoiceUI(id)
+metaChoiceUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a shiny UI element

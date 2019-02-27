@@ -4,7 +4,7 @@
 \alias{addFeatureExpr}
 \title{Adds gene expression to plot data.}
 \usage{
-addFeatureExpr(plotData, feature, redMethod)
+addFeatureExpr(plotData, feature, redMethod, inputSCE)
 }
 \arguments{
 \item{plotData}{Data Frame which contains the cell embeddings and meta data
@@ -15,6 +15,8 @@ for this gene will be added to the plotData data frame.}
 
 \item{redMethod}{String The current dimension reduction method being
 visualized. This value is used to determine which gene expression data to use.}
+
+\item{inputSCE}{SingleCellExperiment object which contains data being used.}
 }
 \value{
 The function returns the given data frame with a column added which

@@ -1,6 +1,7 @@
 
 
 
+
 ################################################################################
 # This file contains functions which define the shiny server modules. Many of
 # these modules are functions which return ggplot2 plots.
@@ -23,59 +24,67 @@
 #'
 #' @param plotOptions List which contains the user input values.
 #'
+#' @param inputSCE Single Cell Experiment Object which contains the data to plot.
+#'
 #' @return Returns plots based on user input values and current tab selection.
 #'
 #'
 
-createPlot <- function(input, output, session, plotOptions) {
-  output$inputOut <- shiny::renderPrint({
-    plotOpts <- shiny::reactiveValuesToList(plotOptions)
+createPlot <-
+  function(input,
+    output,
+    session,
+    plotOptions,
+    inputSCE) {
+    output$inputOut <- shiny::renderPrint({
+      plotOpts <- shiny::reactiveValuesToList(plotOptions)
 
-    utils::str(plotOpts)
-  })
+      utils::str(plotOpts)
+    })
 
-  output$testPlot <- shiny::renderPlot({
-    plotOpts <- shiny::reactiveValuesToList(plotOptions)
+    output$testPlot <- shiny::renderPlot({
+      plotOpts <- shiny::reactiveValuesToList(plotOptions)
 
-    switch(
-      plotOpts$plots,
+      switch(
+        plotOpts$plots,
 
-      "tSNE" = plotTsne(
-        sce = sce,
-        metaVar = plotOpts$`TSNE-META`,
-        factor = plotOpts$`TSNE-isFactor`,
-        contour = plotOpts$`TSNE-addContour`,
-        feature = plotOpts$`TSNE-GENE`
-      ),
+        "tSNE" = plotTsne(
+          sce = inputSCE,
+          metaVar = plotOpts$`TSNE-META`,
+          factor = plotOpts$`TSNE-isFactor`,
+          contour = plotOpts$`TSNE-addContour`,
+          feature = plotOpts$`TSNE-GENE`,
+          redMethod = plotOpts$`TSNE-REDUCTION`
+        ),
 
-      "Network" = plotNetwork(sce = cars),
+        "Network" = plotNetwork(sce = cars),
 
-      "Pseudotime" = plotPseudotime(
-        sce = sce,
-        metaVar = plotOpts$`PSEUDO-META`,
-        factor = plotOpts$`PSEUDO-isFactor`,
-        contour = plotOpts$`PSEUDO-addContour`,
-        feature = plotOpts$`PSEUDO-GENE`
-      ),
+        "Pseudotime" = plotPseudotime(
+          sce = inputSCE,
+          metaVar = plotOpts$`PSEUDO-META`,
+          factor = plotOpts$`PSEUDO-isFactor`,
+          contour = plotOpts$`PSEUDO-addContour`,
+          feature = plotOpts$`PSEUDO-GENE`
+        ),
 
-      "Stacked Bar Charts" = plotStackedBar(
-        sce = sce,
-        colorVar = plotOpts$`BARCHART-GROUP-META`,
-        groupVar = plotOpts$`BARCHART-META`,
-        horizontal = plotOpts$`BARCHART-plotFlip`
-      ),
+        "Stacked Bar Charts" = plotStackedBar(
+          sce = inputSCE,
+          colorVar = plotOpts$`BARCHART-GROUP-META`,
+          groupVar = plotOpts$`BARCHART-META`,
+          horizontal = plotOpts$`BARCHART-plotFlip`
+        ),
 
-      "Scatter Plots" = plotScatter(
-        sce = sce,
-        metaVar = plotOpts$`SCATTER-META`,
-        feature = plotOpts$`SCATTER-GENE`,
-        factor = plotOpts$`SCATTER-isFactor`
-      ),
+        "Scatter Plots" = plotScatter(
+          sce = inputSCE,
+          metaVar = plotOpts$`SCATTER-META`,
+          feature = plotOpts$`SCATTER-GENE`,
+          factor = plotOpts$`SCATTER-isFactor`
+        ),
 
-      "Meta Data" = plotMeta(sce = cars)
-    )
-  })
-}
+        "Meta Data" = plotMeta(sce = cars)
+      )
+    })
+  }
 
 
 
@@ -92,11 +101,12 @@ plotTsne <-
     metaVar = FALSE,
     clones = FALSE,
     factor = FALSE,
-    contour = FALSE) {
+    contour = FALSE,
+    redMethod = FALSE) {
     plotData <-
       makePlotData(
         sce = sce,
-        redMethod = "tsne.Seurat",
+        redMethod = redMethod,
         metaVar = metaVar,
         feature = feature
       )
@@ -108,20 +118,21 @@ plotTsne <-
     if (shiny::isTruthy(feature)) {
       b <-
         ggplot2::ggplot(data = plotData) + ggplot2::geom_point(ggplot2::aes_(
-          x = ~ tSNE_1,
-          y = ~ tSNE_2,
+          x = ~ Dim.1,
+          y = ~ Dim.2,
           color = as.name(feature)
         )) + viridis::scale_color_viridis()
     } else {
       b <-
         ggplot2::ggplot(data = plotData) + ggplot2::geom_point(ggplot2::aes_(
-          x = ~ tSNE_1,
-          y = ~ tSNE_2,
+          x = ~ Dim.1,
+          y = ~ Dim.2,
           color = as.name(metaVar)
         ))
     }
 
-    br <- b + ggplot2::labs(title = "tSNE") + ggplot2::theme_classic()
+    br <-
+      b + ggplot2::labs(title = "tSNE") + ggplot2::theme_classic()
 
     if (contour) {
       datCols <-
@@ -328,13 +339,4 @@ plotContour <- function(plotData, metaVar, dataCols) {
         y = as.name(dimY),
         color = as.name(metaVar)
       ))
-}
-
-
-
-addExprToPlot <- function(plotData, feature, exprAssay) {
-  plotData[[feature]] <-
-    SummarizedExperiment::assay(sce, exprAssay)[feature,]
-
-  return(plotData)
 }

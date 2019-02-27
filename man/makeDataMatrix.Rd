@@ -39,5 +39,4 @@ genes <- c("Apoa1", "Mettl7a1")
 exprMat <- matrix(rnorm(100), 3, 3)
 
 newMat <- makeDataMatrix(exprMat, barcodes, genes)
-
 }

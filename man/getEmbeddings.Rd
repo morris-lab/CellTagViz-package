@@ -33,9 +33,11 @@ combined with metadata to generate visualizations with ggplot2.
 
 sce <- SingleCellExperiment::SingleCellExperiment()
 
-reducedDims(sce, "tSNE") <- matrix(data = rnorm(100),
-                                          nrow = 10,
-                                          ncol = 10)
+reducedDims(sce, "tSNE") <- matrix(
+  data = rnorm(100),
+  nrow = 10,
+  ncol = 10
+)
 
 cellEmbeddings <- getEmbeddings(sce, "tSNE")
 }

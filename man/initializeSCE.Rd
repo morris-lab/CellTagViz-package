@@ -36,7 +36,6 @@ cellBCs <- getCellBarcodes(seuratObj, monocleObj)
 featureList <- getFeatures(seuratObj, monocleObj)
 
 sce <- initializeSCE(cellBCs, featureList)
-
 }
 
 }

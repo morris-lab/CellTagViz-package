@@ -27,10 +27,10 @@ of the SCE object. These data are processed to make sure all of the cells
 and features from both the monocle object and seurat object are represented.
 Furthermore, the meta data from the seurat object is added to the colData of
 the SCE object. Each variable name in the seurat meta data is given the
-suffix ".Seurat" to identify its origins once stored in the SCE object.
+suffix '.Seurat' to identify its origins once stored in the SCE object.
 The cell embeddings for each dimension reduction mehtod used in seurat are
 stored in the SCE object. Once again the names for each set of cell embeddings
-is suffixed with ".Seurat" to identify the origins of the embeddings.
+is suffixed with '.Seurat' to identify the origins of the embeddings.
 }
 \examples{
 
@@ -39,7 +39,6 @@ is suffixed with ".Seurat" to identify the origins of the embeddings.
 sce <- SingleCellExperiment()
 
 sceData <- addSeuratData(sce, seuratObj)
-
 }
 
 }

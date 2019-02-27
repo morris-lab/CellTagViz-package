@@ -1,6 +1,9 @@
 
 
 
+
+
+
 # ==============================================================================
 # This file contains functions, or modules, used to construct the UI for the
 # CellTagViz website. These modules will be used to also construct the UI for
@@ -50,11 +53,13 @@ welcomePanelUI <- function(id) {
 #'
 #' @param id String which defines the namespace of the module.
 #'
+#' @param inputData SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
 
-plotsPanelUI <- function(id) {
+plotsPanelUI <- function(id, inputData) {
   ns <- shiny::NS(id)
 
   shiny::tabPanel(
@@ -63,7 +68,7 @@ plotsPanelUI <- function(id) {
     shiny::sidebarLayout(
       position = "left",
       fluid = TRUE,
-      sidebarPanel = shiny::sidebarPanel(plotPanelSideBar(id)),
+      sidebarPanel = shiny::sidebarPanel(plotPanelSideBar(id, inputSCE = inputData)),
 
       shiny::mainPanel(
         shiny::tabsetPanel(
@@ -99,10 +104,12 @@ plotsPanelUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputData SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
-dataPanelUI <- function(id) {
+dataPanelUI <- function(id, inputData) {
   ns <- shiny::NS(id)
 
   shiny::tabPanel(title = "Data",
@@ -152,17 +159,19 @@ peoplePanelUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
 
-featureChoiceUI <- function(id) {
+featureChoiceUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::selectizeInput(
     inputId = ns("GENE"),
     label = "Choose a Gene",
-    choices = c(Choose = "", rownames(sce))
+    choices = c(Choose = "", rownames(inputSCE))
   )
 }
 
@@ -180,11 +189,13 @@ featureChoiceUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
 
-metaChoiceUI <- function(id) {
+metaChoiceUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   if (id == "BARCHART-GROUP") {
@@ -192,7 +203,7 @@ metaChoiceUI <- function(id) {
       shiny::selectizeInput(
         inputId = ns("META"),
         label = "Choose a Variable",
-        choices = names(SingleCellExperiment::colData(sce)),
+        choices = names(SingleCellExperiment::colData(inputSCE)),
         selected = "res.0.6.Seurat"
       )
     )
@@ -201,7 +212,7 @@ metaChoiceUI <- function(id) {
       shiny::selectizeInput(
         inputId = ns("META"),
         label = "Choose a Variable",
-        choices = names(SingleCellExperiment::colData(sce)),
+        choices = names(SingleCellExperiment::colData(inputSCE)),
         selected = "State.Monocle"
       )
     )
@@ -308,11 +319,13 @@ factorButtonUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
 
-plotDownloadUI <- function(id) {
+plotDownloadUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::downloadButton(outputId = ns("plotDownload"),
@@ -343,21 +356,23 @@ plotDownloadUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
 
-plotPanelSideBar <- function(id) {
+plotPanelSideBar <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::tagList(
-    tsneSideBarUI("TSNE"),
-    networkSideBarUI("NETWORK"),
-    pseudotimeSideBarUI("PSEUDO"),
-    scatterSideBarUI("SCATTER"),
-    stackedSideBarUI("BARCHART"),
-    metaSideBarUI("METAVAR"),
-    plotDownloadUI("DOWNLOAD")
+    tsneSideBarUI("TSNE", inputSCE = inputSCE),
+    networkSideBarUI("NETWORK", inputSCE = inputSCE),
+    pseudotimeSideBarUI("PSEUDO", inputSCE = inputSCE),
+    scatterSideBarUI("SCATTER", inputSCE = inputSCE),
+    stackedSideBarUI("BARCHART", inputSCE = inputSCE),
+    metaSideBarUI("METAVAR", inputSCE = inputSCE),
+    plotDownloadUI("DOWNLOAD", inputSCE = inputSCE)
   )
 }
 
@@ -382,20 +397,22 @@ plotPanelSideBar <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a Shiny UI element
 #'
 #'
 
 
 
-tsneSideBarUI <- function(id) {
+tsneSideBarUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::conditionalPanel(
     condition = "input.plots == 'tSNE'",
-    reductionChoiceUI(id),
-    featureChoiceUI(id),
-    metaChoiceUI(id),
+    reductionChoiceUI(id, inputSCE = inputSCE),
+    featureChoiceUI(id, inputSCE = inputSCE),
+    metaChoiceUI(id, inputSCE = inputSCE),
     contourButtonUI(id),
     factorButtonUI(id),
     shiny::helpText("tSNE Panel")
@@ -422,17 +439,19 @@ tsneSideBarUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a Shiny UI element
 #'
 
 
-networkSideBarUI <- function(id) {
+networkSideBarUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::conditionalPanel(
     condition = "input.plots == 'Network'",
-    featureChoiceUI(id),
-    metaChoiceUI(id),
+    featureChoiceUI(id, inputSCE = inputSCE),
+    metaChoiceUI(id, inputSCE = inputSCE),
     cloneChoiceUI(id),
     shiny::helpText("Network Panel")
   )
@@ -459,17 +478,19 @@ networkSideBarUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a Shiny UI element
 #'
 
 
-pseudotimeSideBarUI <- function(id) {
+pseudotimeSideBarUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::conditionalPanel(
     condition = "input.plots == 'Pseudotime'",
-    featureChoiceUI(id),
-    metaChoiceUI(id),
+    featureChoiceUI(id, inputSCE = inputSCE),
+    metaChoiceUI(id, inputSCE = inputSCE),
     contourButtonUI(id),
     factorButtonUI(id),
     shiny::helpText("Pseudotime Panel")
@@ -495,17 +516,19 @@ pseudotimeSideBarUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a Shiny UI element
 #'
 
 
-stackedSideBarUI <- function(id) {
+stackedSideBarUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::conditionalPanel(
     condition = "input.plots == 'Stacked Bar Charts'",
-    metaChoiceUI("BARCHART-GROUP"),
-    metaChoiceUI(id),
+    metaChoiceUI("BARCHART-GROUP", inputSCE = inputSCE),
+    metaChoiceUI(id, inputSCE = inputSCE),
     horizontalButtonUI(id),
     shiny::helpText("Stacked Bar Panel")
   )
@@ -531,17 +554,19 @@ stackedSideBarUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a Shiny UI element
 #'
 
 
-scatterSideBarUI <- function(id) {
+scatterSideBarUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::conditionalPanel(
     condition = "input.plots == 'Scatter Plots'",
-    featureChoiceUI(id),
-    metaChoiceUI(id),
+    featureChoiceUI(id, inputSCE = inputSCE),
+    metaChoiceUI(id, inputSCE = inputSCE),
     factorButtonUI(id),
     shiny::helpText("Scatter Chart Panel")
   )
@@ -566,16 +591,20 @@ scatterSideBarUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a Shiny UI element
 #'
 
 
-metaSideBarUI <- function(id) {
+metaSideBarUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
-  shiny::conditionalPanel(condition = "input.plots == 'Meta Data'",
-    featureChoiceUI(id),
-    shiny::helpText("Meta Data Panel"))
+  shiny::conditionalPanel(
+    condition = "input.plots == 'Meta Data'",
+    featureChoiceUI(id, inputSCE = inputSCE),
+    shiny::helpText("Meta Data Panel")
+  )
 }
 
 
@@ -613,16 +642,18 @@ horizontalButtonUI <- function(id) {
 #'
 #' @param id String which defines the namespace for the module
 #'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
 #' @return Returns a shiny UI element
 #'
 
 
-reductionChoiceUI <- function(id) {
+reductionChoiceUI <- function(id, inputSCE) {
   ns <- shiny::NS(id)
 
   shiny::selectizeInput(
     inputId = ns("REDUCTION"),
     label = "Choose a dimension reduction method",
-    choices = SingleCellExperiment::reducedDimNames(sce)
+    choices = SingleCellExperiment::reducedDimNames(inputSCE)
   )
 }

@@ -4,10 +4,12 @@
 \alias{pseudotimeSideBarUI}
 \title{This module defines the UI element for the Pseudotime plot panel Sidebar.}
 \usage{
-pseudotimeSideBarUI(id)
+pseudotimeSideBarUI(id, inputSCE)
 }
 \arguments{
 \item{id}{String which defines the namespace for the module}
+
+\item{inputSCE}{SingleCellExperiment object which contains current data.}
 }
 \value{
 Returns a Shiny UI element
