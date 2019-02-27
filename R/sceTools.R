@@ -24,24 +24,23 @@
 #'
 #' sce <- SingleCellExperiment::SingleCellExperiment()
 #'
-#' reducedDims(sce, 'tSNE') <- matrix(data = rnorm(100),
-#'                                           nrow = 10,
-#'                                           ncol = 10)
+#' reducedDims(sce, "tSNE") <- matrix(
+#'   data = rnorm(100),
+#'   nrow = 10,
+#'   ncol = 10
+#' )
 #'
-#' cellEmbeddings <- getEmbeddings(sce, 'tSNE')
-#'}
+#' cellEmbeddings <- getEmbeddings(sce, "tSNE")
+#' }
 #'
-
 getEmbeddings <- function(sce, redMethod, cells = FALSE) {
-    
-    embeddings <- SingleCellExperiment::reducedDim(sce, redMethod)
-    
-    if (cells) {
-        
-        embeddings <- embeddings[cells, ]
-    }
-    
-    return(embeddings)
+  embeddings <- SingleCellExperiment::reducedDim(sce, redMethod)
+
+  if (cells) {
+    embeddings <- embeddings[cells, ]
+  }
+
+  return(embeddings)
 }
 
 
@@ -66,24 +65,20 @@ getEmbeddings <- function(sce, redMethod, cells = FALSE) {
 #' metaData <- sample(letters, 15)
 #'
 #' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
-#'                                                   Letters = metaData))
+#'   Letters = metaData
+#' ))
 #'
-#' letters <- getMetaData(sce, 'Letters')
-#'
+#' letters <- getMetaData(sce, "Letters")
 #' }
 #'
-
 getMetaData <- function(sce, varName, cells = FALSE) {
-    
-    metaData <- SingleCellExperiment::colData(sce)[varName]
-    
-    if (cells) {
-        
-        metaData <- metaData[cells, ]
-    }
-    
-    return(metaData)
-    
+  metaData <- SingleCellExperiment::colData(sce)[varName]
+
+  if (cells) {
+    metaData <- metaData[cells, ]
+  }
+
+  return(metaData)
 }
 
 
@@ -115,60 +110,53 @@ getMetaData <- function(sce, varName, cells = FALSE) {
 #'
 #' metaData <- sample(letters, 15)
 #'
-#' tSNE.embeddings <- matrix(data = rnorm(250),
-#'                           nrow = 25,
-#'                           ncol = 10)
+#' tSNE.embeddings <- matrix(
+#'   data = rnorm(250),
+#'   nrow = 25,
+#'   ncol = 10
+#' )
 #'
 #' sce <- SingleCellExperiment::SingleCellExperiment(colData = list(
-#'                                                   Letters = metaData))
+#'   Letters = metaData
+#' ))
 #'
-#' reducedDim(sce, 'tSNE') <- tSNE.embeddings
+#' reducedDim(sce, "tSNE") <- tSNE.embeddings
 #'
-#' plotData <- makePlotData(sce, 'tSNE', 'Letters')
+#' plotData <- makePlotData(sce, "tSNE", "Letters")
+#' }
 #'
-#'}
-#'
-
 makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE) {
-    
-    if (!shiny::isTruthy(redMethod)) {
-        
-        plotData <- SingleCellExperiment::colData(sce)
-        
-        plotData <- as.data.frame(plotData)
-        
-        if (shiny::isTruthy(feature)) {
-            
-            plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = "seurat")
-            
-            return(plotData)
-            
-        }
-        
-        return(plotData)
-        
-    }
-    
-    embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
-    
-    embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
-    
-    metaData <- getMetaData(sce = sce, varName = metaVar, cells = cells)
-    
-    plotData <- merge(embeddings, metaData, by = "row.names")
-    
+  if (!shiny::isTruthy(redMethod)) {
+    plotData <- SingleCellExperiment::colData(sce)
+
     plotData <- as.data.frame(plotData)
-    
-    rownames(plotData) <- plotData$Row.names
-    
+
     if (shiny::isTruthy(feature)) {
-        
-        plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
-        
+      plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = "seurat")
+
+      return(plotData)
     }
-    
+
     return(plotData)
-    
+  }
+
+  embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
+
+  embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
+
+  metaData <- getMetaData(sce = sce, varName = metaVar, cells = cells)
+
+  plotData <- merge(embeddings, metaData, by = "row.names")
+
+  plotData <- as.data.frame(plotData)
+
+  rownames(plotData) <- plotData$Row.names
+
+  if (shiny::isTruthy(feature)) {
+    plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
+  }
+
+  return(plotData)
 }
 
 
@@ -198,29 +186,20 @@ makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE
 #' plotData <- makePlotData(blah, blah, blah)
 #'
 #' plotData <- addFeatureExpr(foo, bar, foo)
-#'
 #' }
 #'
-
 addFeatureExpr <- function(plotData, feature, redMethod) {
-    
-    if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
-        
-        exprData <- SummarizedExperiment::assay(sce, "ScaleData.Seurat")[feature, ]
-        
-    } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
-        
-        exprData <- SummarizedExperiment::assay(sce, "Counts.Monocle")[feature, ]
-        
-    }
-    
-    exprData <- as.data.frame(exprData)
-    
-    plotData[[feature]] <- 0
-    
-    plotData[rownames(exprData), feature] <- exprData[rownames(exprData), 1]
-    
-    return(plotData)
-    
-}
+  if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
+    exprData <- SummarizedExperiment::assay(sce, "ScaleData.Seurat")[feature, ]
+  } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
+    exprData <- SummarizedExperiment::assay(sce, "Counts.Monocle")[feature, ]
+  }
 
+  exprData <- as.data.frame(exprData)
+
+  plotData[[feature]] <- 0
+
+  plotData[rownames(exprData), feature] <- exprData[rownames(exprData), 1]
+
+  return(plotData)
+}

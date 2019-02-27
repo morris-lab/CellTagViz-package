@@ -30,30 +30,28 @@
 #' dataSets <- list(seurat = seuratObj, monocle = monocleObj)
 #'
 #' sce <- makeVizData(dataSets)
-#'
 #' }
 #'
 #' @export
 
 makeVizData <- function(dataSets) {
-    
-    names(dataSets) <- toupper(names(dataSets))
-    
-    seuratObject <- dataSets[["SEURAT"]]
-    
-    monocleObject <- dataSets[["MONOCLE"]]
-    
-    cellBarcodes <- getCellBarcodes(seurat = seuratObject, monocle = monocleObject)
-    
-    featureList <- getFeatures(seurat = seuratObject, monocle = monocleObject)
-    
-    sceObject <- initializeSCE(cellBCs = cellBarcodes, features = featureList)
-    
-    sceObject <- addSeuratData(sceObject, seuratObject)
-    
-    sceObject <- addMonocleData(sceObject, monocleObject)
-    
-    return(sceObject)
+  names(dataSets) <- toupper(names(dataSets))
+
+  seuratObject <- dataSets[["SEURAT"]]
+
+  monocleObject <- dataSets[["MONOCLE"]]
+
+  cellBarcodes <- getCellBarcodes(seurat = seuratObject, monocle = monocleObject)
+
+  featureList <- getFeatures(seurat = seuratObject, monocle = monocleObject)
+
+  sceObject <- initializeSCE(cellBCs = cellBarcodes, features = featureList)
+
+  sceObject <- addSeuratData(sceObject, seuratObject)
+
+  sceObject <- addMonocleData(sceObject, monocleObject)
+
+  return(sceObject)
 }
 
 #' Returns vector of Cell Barcodes.
@@ -77,15 +75,12 @@ makeVizData <- function(dataSets) {
 #' \dontrun{
 #'
 #' cellBCs <- getCellBarcodes(seuratObj, monocleObj)
-#'
 #' }
 #'
 #' @export
 
 getCellBarcodes <- function(seurat, monocle) {
-    
-    barcodes <- union(seurat@cell.names, colnames(monocle))
-    
+  barcodes <- union(seurat@cell.names, colnames(monocle))
 }
 
 #' Returns character vector of Feature Names.
@@ -109,16 +104,13 @@ getCellBarcodes <- function(seurat, monocle) {
 #' \dontrun{
 #'
 #' featureList <- getFeatures(seuratObj, monocleObj)
-#'
 #' }
 #'
 #' @export
 
 
 getFeatures <- function(seurat, monocle) {
-    
-    features <- union(rownames(seurat@scale.data), rownames(monocle))
-    
+  features <- union(rownames(seurat@scale.data), rownames(monocle))
 }
 
 #' Initializes SCE object for Monocle and Seurat Data.
@@ -149,20 +141,18 @@ getFeatures <- function(seurat, monocle) {
 #' featureList <- getFeatures(seuratObj, monocleObj)
 #'
 #' sce <- initializeSCE(cellBCs, featureList)
-#'
 #' }
 #'
 #' @export
 
 initializeSCE <- function(cellBCs, features) {
-    
-    cellDF <- data.frame(row.names = cellBCs)
-    
-    featureDF <- data.frame(row.names = features)
-    
-    sce <- SingleCellExperiment::SingleCellExperiment(colData = cellDF, rowData = featureDF)
-    
-    return(sce)
+  cellDF <- data.frame(row.names = cellBCs)
+
+  featureDF <- data.frame(row.names = features)
+
+  sce <- SingleCellExperiment::SingleCellExperiment(colData = cellDF, rowData = featureDF)
+
+  return(sce)
 }
 
 
@@ -199,30 +189,27 @@ initializeSCE <- function(cellBCs, features) {
 #'
 #' counts <- matrix(rnorm(100), 10, 10)
 #'
-#' sce <- addExprData(sce, counts, 'Counts')
+#' sce <- addExprData(sce, counts, "Counts")
+#' }
 #'
-#'}
-#'
-
 addExprData <- function(sce, exprMat, datName) {
-    
-    exprMat <- Matrix::Matrix(exprMat, sparse = TRUE)
-    
-    missingGenes <- rownames(sce)[!rownames(sce) %in% rownames(exprMat)]
-    
-    missingCells <- colnames(sce)[!colnames(sce) %in% colnames(exprMat)]
-    
-    cellMat <- Matrix::Matrix(nrow = nrow(exprMat), ncol = length(missingCells))
-    
-    geneMat <- Matrix::Matrix(nrow = length(missingGenes), ncol = ncol(exprMat))
-    
-    exprMat <- cbind(exprMat, cellMat)
-    
-    exprMat <- rbind(exprMat, geneMat)
-    
-    sce@assays$data[[datName]] <- exprMat
-    
-    return(sce)
+  exprMat <- Matrix::Matrix(exprMat, sparse = TRUE)
+
+  missingGenes <- rownames(sce)[!rownames(sce) %in% rownames(exprMat)]
+
+  missingCells <- colnames(sce)[!colnames(sce) %in% colnames(exprMat)]
+
+  cellMat <- Matrix::Matrix(nrow = nrow(exprMat), ncol = length(missingCells))
+
+  geneMat <- Matrix::Matrix(nrow = length(missingGenes), ncol = ncol(exprMat))
+
+  exprMat <- cbind(exprMat, cellMat)
+
+  exprMat <- rbind(exprMat, geneMat)
+
+  sce@assays$data[[datName]] <- exprMat
+
+  return(sce)
 }
 
 #' Creates sparse matrices of feature count data
@@ -249,42 +236,35 @@ addExprData <- function(sce, exprMat, datName) {
 #'
 #' @examples
 #'
-#' barcodes <- c('BC1', 'BC2')
+#' barcodes <- c("BC1", "BC2")
 #'
-#' genes <- c('Apoa1', 'Mettl7a1')
+#' genes <- c("Apoa1", "Mettl7a1")
 #'
 #' exprMat <- matrix(rnorm(100), 3, 3)
 #'
 #' newMat <- makeDataMatrix(exprMat, barcodes, genes)
-#'
 #' @export
 
 makeDataMatrix <- function(data2add, cellBCs, features) {
-    
-    data2add <- Matrix::Matrix(data2add, sparse = TRUE)
-    
-    missingBCs <- cellBCs[!cellBCs %in% colnames(data2add)]
-    
-    missingFeatures <- features[!features %in% rownames(data2add)]
-    
-    if (length(missingBCs) > 0) {
-        
-        bcMat <- Matrix::Matrix(nrow = nrow(data2add), ncol = length(missingBCs))
-        
-        data2add <- base::cbind(data2add, bcMat)
-        
-    }
-    
-    if (length(missingFeatures) > 0) {
-        
-        featureMat <- Matrix::Matrix(nrow = length(missingFeatures), ncol = ncol(data2add))
-        
-        data2add <- base::rbind(data2add, featureMat)
-        
-    }
-    
-    return(data2add)
-    
+  data2add <- Matrix::Matrix(data2add, sparse = TRUE)
+
+  missingBCs <- cellBCs[!cellBCs %in% colnames(data2add)]
+
+  missingFeatures <- features[!features %in% rownames(data2add)]
+
+  if (length(missingBCs) > 0) {
+    bcMat <- Matrix::Matrix(nrow = nrow(data2add), ncol = length(missingBCs))
+
+    data2add <- base::cbind(data2add, bcMat)
+  }
+
+  if (length(missingFeatures) > 0) {
+    featureMat <- Matrix::Matrix(nrow = length(missingFeatures), ncol = ncol(data2add))
+
+    data2add <- base::rbind(data2add, featureMat)
+  }
+
+  return(data2add)
 }
 
 #' Add Seurat object data to an SCE object
@@ -318,35 +298,32 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
 #' sce <- SingleCellExperiment()
 #'
 #' sceData <- addSeuratData(sce, seuratObj)
-#'
 #' }
 #'
 #' @export
 
 addSeuratData <- function(sce, seurat) {
-    
-    barcodeList <- colnames(sce)
-    
-    featureList <- rownames(sce)
-    
-    colnames(seurat@meta.data) <- paste0(colnames(seurat@meta.data), ".Seurat")
-    
-    sce@assays$data[["RawData.Seurat"]] <- makeDataMatrix(data2add = seurat@raw.data, cellBCs = barcodeList, features = featureList)
-    
-    sce@assays$data[["ScaleData.Seurat"]] <- makeDataMatrix(data2add = seurat@scale.data, cellBCs = barcodeList, features = featureList)
-    
-    sce@colData[rownames(seurat@meta.data), colnames(seurat@meta.data)] <- seurat@meta.data[rownames(seurat@meta.data), colnames(seurat@meta.data)]
-    
-    cellEmbeddings <- lapply(names(seurat@dr), function(id) {
-        seurat@dr[[id]]@cell.embeddings
-    })
-    
-    names(cellEmbeddings) <- paste0(names(seurat@dr), ".Seurat")
-    
-    sce@reducedDims@listData <- cellEmbeddings
-    
-    return(sce)
-    
+  barcodeList <- colnames(sce)
+
+  featureList <- rownames(sce)
+
+  colnames(seurat@meta.data) <- paste0(colnames(seurat@meta.data), ".Seurat")
+
+  sce@assays$data[["RawData.Seurat"]] <- makeDataMatrix(data2add = seurat@raw.data, cellBCs = barcodeList, features = featureList)
+
+  sce@assays$data[["ScaleData.Seurat"]] <- makeDataMatrix(data2add = seurat@scale.data, cellBCs = barcodeList, features = featureList)
+
+  sce@colData[rownames(seurat@meta.data), colnames(seurat@meta.data)] <- seurat@meta.data[rownames(seurat@meta.data), colnames(seurat@meta.data)]
+
+  cellEmbeddings <- lapply(names(seurat@dr), function(id) {
+    seurat@dr[[id]]@cell.embeddings
+  })
+
+  names(cellEmbeddings) <- paste0(names(seurat@dr), ".Seurat")
+
+  sce@reducedDims@listData <- cellEmbeddings
+
+  return(sce)
 }
 
 
@@ -380,39 +357,38 @@ addSeuratData <- function(sce, seurat) {
 #' sce <- SingleCellExperiment()
 #'
 #' sceData <- addMonocleData(sce, monocleObj)
-#'
 #' }
 #'
 #' @export
 
 addMonocleData <- function(sce, monocleObj) {
-    
-    barcodeList <- colnames(sce)
-    
-    featureList <- rownames(sce)
-    # sce@reducedDims@listData[['Pseudotime.Monocle']] <- Matrix::Matrix(data = t(monocleObj@reducedDimS), sparse = TRUE)
-    
-    pseudoDims <- t(monocleObj@reducedDimS)
-    
-    missingBCs <- barcodeList[!barcodeList %in% rownames(pseudoDims)]
-    
-    missingDat <- matrix(data = 0, nrow = length(missingBCs), ncol = 2)
-    
-    rownames(missingDat) <- missingBCs
-    
-    pseudoAdd <- rbind(pseudoDims, missingDat)
-    
-    colnames(pseudoAdd) <- c("Component.1", "Component.2")
-    
-    sce@reducedDims@listData[["Pseudotime.Monocle"]] <- pseudoAdd
-    
-    sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(data2add = monocleObj@assayData$exprs, cellBCs = barcodeList, features = featureList)
-    
-    names(monocleObj@phenoData@data) <- paste0(names(monocleObj@phenoData@data), ".Monocle")
-    
-    sce@colData[rownames(monocleObj@phenoData@data), colnames(monocleObj@phenoData@data)] <- monocleObj@phenoData@data[rownames(monocleObj@phenoData@data), 
-        colnames(monocleObj@phenoData@data)]
-    
-    return(sce)
-    
+  barcodeList <- colnames(sce)
+
+  featureList <- rownames(sce)
+  # sce@reducedDims@listData[['Pseudotime.Monocle']] <- Matrix::Matrix(data = t(monocleObj@reducedDimS), sparse = TRUE)
+
+  pseudoDims <- t(monocleObj@reducedDimS)
+
+  missingBCs <- barcodeList[!barcodeList %in% rownames(pseudoDims)]
+
+  missingDat <- matrix(data = 0, nrow = length(missingBCs), ncol = 2)
+
+  rownames(missingDat) <- missingBCs
+
+  pseudoAdd <- rbind(pseudoDims, missingDat)
+
+  colnames(pseudoAdd) <- c("Component.1", "Component.2")
+
+  sce@reducedDims@listData[["Pseudotime.Monocle"]] <- pseudoAdd
+
+  sce@assays$data[["Counts.Monocle"]] <- makeDataMatrix(data2add = monocleObj@assayData$exprs, cellBCs = barcodeList, features = featureList)
+
+  names(monocleObj@phenoData@data) <- paste0(names(monocleObj@phenoData@data), ".Monocle")
+
+  sce@colData[rownames(monocleObj@phenoData@data), colnames(monocleObj@phenoData@data)] <- monocleObj@phenoData@data[
+    rownames(monocleObj@phenoData@data),
+    colnames(monocleObj@phenoData@data)
+  ]
+
+  return(sce)
 }
