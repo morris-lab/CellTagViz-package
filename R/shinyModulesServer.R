@@ -28,6 +28,7 @@
 #'
 #' @return Returns plots based on user input values and current tab selection.
 #'
+#' @export
 #'
 
 createPlot <-

@@ -1,12 +1,12 @@
 
-library(tidyverse)
-library(shiny)
-library(shinythemes)
-library(ggplot2)
-library(SingleCellExperiment)
-library(Seurat)
+#library(tidyverse)
+#library(shiny)
+#library(shinythemes)
+#library(ggplot2)
+#library(SingleCellExperiment)
+#library(Seurat)
 
-library(CellTagViz)
+#library(CellTagViz)
 
 
 monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
@@ -42,13 +42,11 @@ sce <- CellTagViz::makeVizData(dataSets = dataList)
 
 ui <- navbarPage(
 
-  theme = shinythemes::shinytheme("cosmo"),
+  theme = shinythemes::shinytheme("yeti"),
   title = "CellTagViz",
 
-  welcomePanelUI("welcome"),
-  plotsPanelUI("plots", inputData = sce),
-  dataPanelUI("data", inputData = sce),
-  peoplePanelUI("people")
+  plotsPanelMinimalUI("plots", inputData = sce),
+  dataPanelUI("data", inputData = sce)
 
 )
 

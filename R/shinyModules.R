@@ -33,9 +33,11 @@
 welcomePanelUI <- function(id) {
   ns <- shiny::NS(id)
 
+  htmlPath <- system.file("markdown", "WELCOME.html", package = "CellTagViz")
+
   shiny::tabPanel(
     title = "Welcome!",
-    shiny::mainPanel(shiny::includeHTML(path = "inst/markdown/WELCOME.html"))
+    shiny::mainPanel(shiny::includeHTML(path = htmlPath))
   )
 }
 
@@ -60,6 +62,8 @@ welcomePanelUI <- function(id) {
 #' @param inputData SingleCellExperiment object which contains current data.
 #'
 #' @return Returns a shiny UI element
+#'
+#' @export
 #'
 
 
@@ -114,6 +118,8 @@ plotsPanelUI <- function(id, inputData) {
 #'
 #' @return Returns a shiny UI element
 #'
+#' @export
+#'
 
 dataPanelUI <- function(id, inputData) {
   ns <- shiny::NS(id)
@@ -143,15 +149,19 @@ dataPanelUI <- function(id, inputData) {
 #'
 #' @return Returns a shiny UI element
 #'
+#' @export
+#'
 
 
 peoplePanelUI <- function(id) {
   ns <- shiny::NS(id)
 
+  htmlPath <- system.file("markdown", "PEOPLE.html", package = "CellTagViz")
+
   shiny::tabPanel(
     title = "People",
 
-    shiny::mainPanel(shiny::includeHTML("inst/markdown/PEOPLE.html"))
+    shiny::mainPanel(shiny::includeHTML(path = htmlPath))
   )
 }
 
@@ -172,6 +182,7 @@ peoplePanelUI <- function(id) {
 #' @param inputSCE SingleCellExperiment object which contains current data.
 #'
 #' @return Returns a shiny UI element
+#'
 #'
 
 
@@ -675,3 +686,60 @@ reductionChoiceUI <- function(id, inputSCE) {
     choices = SingleCellExperiment::reducedDimNames(inputSCE)
   )
 }
+
+
+
+#' Module for plots panel of CellTagViz
+#'
+#' This is a shiny UI module that defines the layout of the plots panel of the
+#' navbar menu. For the sidebar of this panel layout the module calls the
+#' function \code{plotPanelSideBar} to define the different sidebar inputs for
+#' each tab. This module can be modified to include more/different plots. In the
+#' main panel it is possible to print the current user inputs. This can be
+#' helpful when modifying the shiny app. The function to do this has been
+#' commented out. The plots are defined as tabs in a tabset in the main panel.
+#' New plots can easily be added this way.
+#'
+#' @param id String which defines the namespace of the module.
+#'
+#' @param inputData SingleCellExperiment object which contains current data.
+#'
+#' @return Returns a shiny UI element
+#'
+#' @export
+#'
+
+plotsPanelMinimalUI <- function(id, inputData) {
+  ns <- shiny::NS(id)
+
+  shiny::tabPanel(
+    title = "Plots",
+
+    shiny::sidebarLayout(
+      position = "left",
+      fluid = TRUE,
+      sidebarPanel = shiny::sidebarPanel(plotPanelSideBar(id, inputSCE = inputData)),
+
+      shiny::mainPanel(
+        shiny::tabsetPanel(
+          id = id,
+          type = "pills",
+
+          shiny::tabPanel("tSNE"),
+          shiny::tabPanel("Network"),
+          #shiny::tabPanel("Pseudotime"),
+          shiny::tabPanel("Stacked Bar Charts"),
+          shiny::tabPanel("Scatter Plots")
+          #shiny::tabPanel("Meta Data")
+        ),
+
+        shiny::tagList(
+          shiny::plotOutput(ns("testPlot")),
+          shiny::verbatimTextOutput(ns("inputOut"))
+        )
+      )
+    )
+  )
+}
+
+

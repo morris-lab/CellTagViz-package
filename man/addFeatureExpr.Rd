@@ -35,7 +35,6 @@ data needed to construct the plot.
 plotData <- makePlotData(blah, blah, blah)
 
 plotData <- addFeatureExpr(foo, bar, foo)
-
 }
 
 }
