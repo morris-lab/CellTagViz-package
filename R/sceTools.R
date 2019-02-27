@@ -125,39 +125,57 @@ getMetaData <- function(sce, varName, cells = FALSE) {
 #' plotData <- makePlotData(sce, "tSNE", "Letters")
 #' }
 #'
-makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE) {
-  if (!shiny::isTruthy(redMethod)) {
-    plotData <- SingleCellExperiment::colData(sce)
 
-    plotData <- as.data.frame(plotData)
+makePlotData <-
+  function(sce,
+    redMethod,
+    metaVar,
+    feature = FALSE,
+    cells = FALSE) {
+    if (!shiny::isTruthy(redMethod)) {
+      plotData <- SingleCellExperiment::colData(sce)
 
-    if (shiny::isTruthy(feature)) {
-      plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = "seurat")
+      plotData <- as.data.frame(plotData)
+
+      if (shiny::isTruthy(feature)) {
+        plotData <-
+          addFeatureExpr(plotData = plotData,
+            feature = feature,
+            redMethod = "seurat")
+
+        return(plotData)
+      }
 
       return(plotData)
     }
 
+    embeddings <-
+      getEmbeddings(sce = sce,
+        redMethod = redMethod,
+        cells = cells)
+
+    embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
+
+    metaData <-
+      getMetaData(sce = sce,
+        varName = metaVar,
+        cells = cells)
+
+    plotData <- merge(embeddings, metaData, by = "row.names")
+
+    plotData <- as.data.frame(plotData)
+
+    rownames(plotData) <- plotData$Row.names
+
+    if (shiny::isTruthy(feature)) {
+      plotData <-
+        addFeatureExpr(plotData = plotData,
+          feature = feature,
+          redMethod = redMethod)
+    }
+
     return(plotData)
   }
-
-  embeddings <- getEmbeddings(sce = sce, redMethod = redMethod, cells = cells)
-
-  embeddings <- methods::as(embeddings[, 1:2], "DataFrame")
-
-  metaData <- getMetaData(sce = sce, varName = metaVar, cells = cells)
-
-  plotData <- merge(embeddings, metaData, by = "row.names")
-
-  plotData <- as.data.frame(plotData)
-
-  rownames(plotData) <- plotData$Row.names
-
-  if (shiny::isTruthy(feature)) {
-    plotData <- addFeatureExpr(plotData = plotData, feature = feature, redMethod = redMethod)
-  }
-
-  return(plotData)
-}
 
 
 #' Adds gene expression to plot data.
@@ -190,16 +208,19 @@ makePlotData <- function(sce, redMethod, metaVar, feature = FALSE, cells = FALSE
 #'
 addFeatureExpr <- function(plotData, feature, redMethod) {
   if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
-    exprData <- SummarizedExperiment::assay(sce, "ScaleData.Seurat")[feature, ]
+    exprData <-
+      SummarizedExperiment::assay(sce, "ScaleData.Seurat")[feature, ]
   } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
-    exprData <- SummarizedExperiment::assay(sce, "Counts.Monocle")[feature, ]
+    exprData <-
+      SummarizedExperiment::assay(sce, "Counts.Monocle")[feature, ]
   }
 
   exprData <- as.data.frame(exprData)
 
   plotData[[feature]] <- 0
 
-  plotData[rownames(exprData), feature] <- exprData[rownames(exprData), 1]
+  plotData[rownames(exprData), feature] <-
+    exprData[rownames(exprData), 1]
 
   return(plotData)
 }

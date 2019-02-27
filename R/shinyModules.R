@@ -1,4 +1,6 @@
 
+
+
 # ==============================================================================
 # This file contains functions, or modules, used to construct the UI for the
 # CellTagViz website. These modules will be used to also construct the UI for
@@ -26,12 +28,8 @@
 welcomePanelUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::tabPanel(
-    title = "Welcome!",
-    shiny::mainPanel(
-      shiny::includeHTML(path = "inst/markdown/WELCOME.html")
-    )
-  )
+  shiny::tabPanel(title = "Welcome!",
+    shiny::mainPanel(shiny::includeHTML(path = "inst/markdown/WELCOME.html")))
 }
 
 
@@ -65,9 +63,7 @@ plotsPanelUI <- function(id) {
     shiny::sidebarLayout(
       position = "left",
       fluid = TRUE,
-      sidebarPanel = shiny::sidebarPanel(
-        plotPanelSideBar(id)
-      ),
+      sidebarPanel = shiny::sidebarPanel(plotPanelSideBar(id)),
 
       shiny::mainPanel(
         shiny::tabsetPanel(
@@ -82,10 +78,8 @@ plotsPanelUI <- function(id) {
           shiny::tabPanel("Meta Data")
         ),
 
-        shiny::tagList(
-          shiny::plotOutput(ns("testPlot")),
-          shiny::verbatimTextOutput(ns("inputOut"))
-        )
+        shiny::tagList(shiny::plotOutput(ns("testPlot")),
+          shiny::verbatimTextOutput(ns("inputOut")))
       )
     )
   )
@@ -111,11 +105,9 @@ plotsPanelUI <- function(id) {
 dataPanelUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::tabPanel(
-    title = "Data",
+  shiny::tabPanel(title = "Data",
 
-    shiny::mainPanel()
-  )
+    shiny::mainPanel())
 }
 
 
@@ -141,13 +133,9 @@ dataPanelUI <- function(id) {
 peoplePanelUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::tabPanel(
-    title = "People",
+  shiny::tabPanel(title = "People",
 
-    shiny::mainPanel(
-      shiny::includeHTML("inst/markdown/PEOPLE.html")
-    )
-  )
+    shiny::mainPanel(shiny::includeHTML("inst/markdown/PEOPLE.html")))
 }
 
 
@@ -209,15 +197,12 @@ metaChoiceUI <- function(id) {
       )
     )
   } else {
-    (
-
-      return(
-        shiny::selectizeInput(
-          inputId = ns("META"),
-          label = "Choose a Variable",
-          choices = names(SingleCellExperiment::colData(sce)),
-          selected = "State.Monocle"
-        )
+    return(
+      shiny::selectizeInput(
+        inputId = ns("META"),
+        label = "Choose a Variable",
+        choices = names(SingleCellExperiment::colData(sce)),
+        selected = "State.Monocle"
       )
     )
   }
@@ -274,11 +259,9 @@ cloneChoiceUI <- function(id) {
 contourButtonUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::checkboxInput(
-    inputId = ns("addContour"),
+  shiny::checkboxInput(inputId = ns("addContour"),
     label = "Add Countour Lines",
-    value = FALSE
-  )
+    value = FALSE)
 }
 
 
@@ -303,11 +286,9 @@ contourButtonUI <- function(id) {
 factorButtonUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::checkboxInput(
-    inputId = ns("isFactor"),
+  shiny::checkboxInput(inputId = ns("isFactor"),
     label = "Is meta data categorical?",
-    value = FALSE
-  )
+    value = FALSE)
 }
 
 
@@ -334,10 +315,8 @@ factorButtonUI <- function(id) {
 plotDownloadUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::downloadButton(
-    outputId = ns("plotDownload"),
-    label = "Download Plot"
-  )
+  shiny::downloadButton(outputId = ns("plotDownload"),
+    label = "Download Plot")
 }
 
 
@@ -594,11 +573,9 @@ scatterSideBarUI <- function(id) {
 metaSideBarUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::conditionalPanel(
-    condition = "input.plots == 'Meta Data'",
+  shiny::conditionalPanel(condition = "input.plots == 'Meta Data'",
     featureChoiceUI(id),
-    shiny::helpText("Meta Data Panel")
-  )
+    shiny::helpText("Meta Data Panel"))
 }
 
 
@@ -619,11 +596,9 @@ metaSideBarUI <- function(id) {
 horizontalButtonUI <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::checkboxInput(
-    inputId = ns("plotFlip"),
+  shiny::checkboxInput(inputId = ns("plotFlip"),
     label = "Horizontal Plot",
-    value = FALSE
-  )
+    value = FALSE)
 }
 
 
