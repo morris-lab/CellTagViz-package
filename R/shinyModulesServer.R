@@ -102,17 +102,19 @@ easyPlot <- function(...) {
 #' function parses the user input and plots the visualization according to the
 #' given user inputs.
 #'
-#' @param feature
+#' @param sce Yes
 #'
-#' @param metaVar
+#' @param feature Yes
 #'
-#' @param clones
+#' @param metaVar Yes
 #'
-#' @param factor
+#' @param clones Yes
 #'
-#' @param contour
+#' @param factor Yes
 #'
-#' @param redMethod
+#' @param contour Yes
+#'
+#' @param redMethod Yes
 #'
 #' @return This function returns a ggplot2 object
 #'
