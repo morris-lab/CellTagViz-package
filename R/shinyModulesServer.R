@@ -95,6 +95,29 @@ easyPlot <- function(...) {
 }
 
 
+
+#' Parses shiny user input and plots dimension reduction visualiztions.
+#'
+#' This function generates 2d visualizations of single-cell RNA data. The
+#' function parses the user input and plots the visualization according to the
+#' given user inputs.
+#'
+#' @param feature
+#'
+#' @param metaVar
+#'
+#' @param clones
+#'
+#' @param factor
+#'
+#' @param contour
+#'
+#' @param redMethod
+#'
+#' @return This function returns a ggplot2 object
+#'
+
+
 plotTsne <-
   function(sce,
     feature = FALSE,
@@ -154,6 +177,8 @@ plotTsne <-
     return(br)
   }
 
+# ==============================================================================
+# ==============================================================================
 
 plotNetwork <-
   function(sce,
@@ -171,6 +196,8 @@ plotNetwork <-
     return(br)
   }
 
+# ==============================================================================
+# ==============================================================================
 
 plotPseudotime <-
   function(sce,
@@ -240,7 +267,8 @@ plotPseudotime <-
     return(br)
   }
 
-
+# ==============================================================================
+# ==============================================================================
 
 plotStackedBar <-
   function(sce,
@@ -266,7 +294,8 @@ plotStackedBar <-
     return(br)
   }
 
-
+# ==============================================================================
+# ==============================================================================
 
 plotScatter <-
   function(sce,
@@ -308,7 +337,8 @@ plotScatter <-
     return(br)
   }
 
-
+# ==============================================================================
+# ==============================================================================
 
 plotMeta <-
   function(sce,
@@ -326,6 +356,8 @@ plotMeta <-
     return(br)
   }
 
+# ==============================================================================
+# ==============================================================================
 
 plotContour <- function(plotData, metaVar, dataCols) {
   dimX <- dataCols[[1]]
