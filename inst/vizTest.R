@@ -15,9 +15,9 @@ monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
 
 #seuratPath <- "../../../Desktop/Warner_CCA_after_TSNE.RDS"
 
-#seuratPath <- "~/../Desktop/Warner_CCA_after_TSNE.RDS"
+seuratPath <- "~/../Desktop/Warner_CCA_after_TSNE.RDS"
 
-seuratPath <- "~/../Desktop/integrated.subset.RDS"
+#seuratPath <- "~/../Desktop/integrated.subset.RDS"
 
 monocleCDS <- readRDS(monoclePath)
 
@@ -32,13 +32,13 @@ sce <- CellTagViz::makeVizData(dataSets = dataList)
 
 
 
-source("R/shinyModules.R")
+#source("R/shinyModules.R")
 
-source("R/shinyModulesServer.R")
+#source("R/shinyModulesServer.R")
 
-source("R/dataTools.R")
+#source("R/dataTools.R")
 
-source("R/sceTools.R")
+#source("R/sceTools.R")
 
 ui <- navbarPage(
 

@@ -27,6 +27,8 @@
 #'
 #' @return Returns a shiny UI element
 #'
+#' @export
+#'
 
 welcomePanelUI <- function(id) {
   ns <- shiny::NS(id)
