@@ -15,6 +15,8 @@ monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
 
 #seuratPath <- "../../../Desktop/Warner_CCA_after_TSNE.RDS"
 
+seuratV3Path <- "~/../Desktop/integrated.subset.RDS"
+
 seuratPath <- "~/../Desktop/Warner_CCA_after_TSNE.RDS"
 
 #seuratPath <- "~/../Desktop/integrated.subset.RDS"
@@ -23,9 +25,30 @@ monocleCDS <- readRDS(monoclePath)
 
 seuratObj <- readRDS(seuratPath)
 
+seuratV3 <- readRDS(seuratV3Path)
 
 dataList <- list(seurat = seuratObj,
-  monocle = monocleCDS)
+  monocle = monocleCDS, seurat3 = seuratV3 )
+
+
+source("~/GitHub/working.Viz/R/dataTools.R")
+
+
+sceSeurat <- addSeuratv3(seuratObj = seuratV3)
+
+reducedDimNames(sceSeurat)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 sce <- CellTagViz::makeVizData(dataSets = dataList)

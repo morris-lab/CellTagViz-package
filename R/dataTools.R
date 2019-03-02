@@ -1,11 +1,4 @@
 
-
-
-
-
-
-
-
 # ==============================================================================
 # This file contains functions which generate SingleCellExperiment objects.
 # Currently, these functions take in Seurat and Monocle objects and creates an
@@ -45,11 +38,14 @@
 #' @export
 
 makeVizData <- function(dataSets) {
+
   names(dataSets) <- toupper(names(dataSets))
 
-  seuratObject <- dataSets[["SEURAT"]]
+  seuratObject <- dataSets[["SEURAT2"]]
 
   monocleObject <- dataSets[["MONOCLE"]]
+
+  seuratObjectV3 <- dataSets[["SEURAT3"]]
 
   cellBarcodes <-
     getCellBarcodes(seurat = seuratObject, monocle = monocleObject)
@@ -267,6 +263,7 @@ addExprData <- function(sce, exprMat, datName) {
 #' @export
 
 makeDataMatrix <- function(data2add, cellBCs, features) {
+
   data2add <- Matrix::Matrix(data2add, sparse = TRUE)
 
   missingBCs <- cellBCs[!cellBCs %in% colnames(data2add)]
@@ -276,6 +273,10 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
   if (length(missingBCs) > 0) {
     bcMat <-
       Matrix::Matrix(nrow = nrow(data2add), ncol = length(missingBCs))
+
+    colnames(bcMat) <- missingBCs
+
+    rownames(bcMat) <- rownames(data2add)
 
     data2add <- base::cbind(data2add, bcMat)
   }
@@ -287,8 +288,14 @@ makeDataMatrix <- function(data2add, cellBCs, features) {
         ncol = ncol(data2add)
       )
 
+    colnames(featureMat) <- colnames(data2add)
+
+    rownames(featureMat) <- rownames(missingFeatures)
+
     data2add <- base::rbind(data2add, featureMat)
   }
+
+  data2add <- as(data2add, "CsparseMatrix")
 
   return(data2add)
 }
@@ -336,14 +343,14 @@ addSeuratData <- function(sce, seurat) {
   colnames(seurat@meta.data) <-
     paste0(colnames(seurat@meta.data), ".Seurat")
 
-  sce@assays$data[["RawData.Seurat"]] <-
+  assay(sce, "RawData.Seurat") <-
     makeDataMatrix(
       data2add = seurat@raw.data,
       cellBCs = barcodeList,
       features = featureList
     )
 
-  sce@assays$data[["ScaleData.Seurat"]] <-
+  assay(sce, "ScaleData.Seurat") <-
     makeDataMatrix(
       data2add = seurat@scale.data,
       cellBCs = barcodeList,
@@ -359,7 +366,7 @@ addSeuratData <- function(sce, seurat) {
 
   names(cellEmbeddings) <- paste0(names(seurat@dr), ".Seurat")
 
-  sce@reducedDims@listData <- cellEmbeddings
+  reducedDims(sce) <- cellEmbeddings
 
   return(sce)
 }
@@ -420,11 +427,11 @@ addMonocleData <- function(sce, monocleObj) {
 
   pseudoAdd <- rbind(pseudoDims, missingDat)
 
-  colnames(pseudoAdd) <- c("Component.1", "Component.2")
+  colnames(pseudoAdd) <- c("Dim.1", "Dim.2")
 
-  sce@reducedDims@listData[["Pseudotime.Monocle"]] <- pseudoAdd
+  reducedDim(sce, type = "Pseudotime.Monocle") <- pseudoAdd
 
-  sce@assays$data[["Counts.Monocle"]] <-
+  assay(sce, "Counts.Monocle") <-
     makeDataMatrix(
       data2add = monocleObj@assayData$exprs,
       cellBCs = barcodeList,
@@ -441,4 +448,79 @@ addMonocleData <- function(sce, monocleObj) {
     ]
 
   return(sce)
+}
+
+
+addMonocleDataNew <- function(monocleObj){
+
+  featureDat <- Biobase::fData(monocleObj)
+
+  phenoDat <- Biobase::pData(monocleObj)
+
+  pseudoDims <- t(monocleObj@reducedDimS)
+
+  monCounts <- Biobase::exprs(monocleObj)
+
+  colnames(featureDat) <- paste0(colnames(featureDat), ".Monocle")
+
+  colnames(phenoDat) <- paste0(colnames(phenoDat), ".Monocle")
+
+  monSCE <- SingleCellExperiment::SingleCellExperiment(colData = phenoDat,
+                                             rowData = featureDat,
+                                             reducedDims = S4Vectors::SimpleList(Pseudotime.Monocle = pseudoDims))
+
+  SummarizedExperiment::assay(monSCE, "Monocle.Counts") <- monCounts
+
+  return(monSCE)
+
+}
+
+addSeuratv3 <- function(seuratObj){
+
+  phenoDat <- seuratObj@meta.data
+
+  colnames(phenoDat) <- paste0(colnames(phenoDat), ".Seurat")
+
+  featureDat <- data.frame("GeneNames.Seurat" = rownames(seuratObj@assays$RNA))
+
+  rownames(featureDat) <- featureDat[[1]]
+
+  redMethods <- names(seuratObj@reductions)
+
+  names(redMethods) <- paste0(redMethods, ".Seurat")
+
+  cellEmbeddings <- lapply(redMethods, function(id){
+
+    Seurat::Embeddings(seuratObj, reduction = id)
+
+  })
+
+  cellEmbeddings <- as(cellEmbeddings, "SimpleList")
+
+  countsDat <- Seurat::GetAssayData(seuratObj, slot = "counts")
+
+  scaledDat <- Seurat::GetAssayData(seuratObj, slot = "scale.data")
+
+  dataDat <- Seurat::GetAssayData(seuratObj, slot = "data")
+
+  countsDat <- makeDataMatrix(data2add = countsDat, cellBCs = rownames(phenoDat), features = rownames(featureDat))
+
+  scaledDat <- makeDataMatrix(data2add = scaledDat, cellBCs = rownames(phenoDat), features = rownames(featureDat))
+
+  dataDat <- makeDataMatrix(data2add = dataDat, cellBCs = rownames(phenoDat), features = rownames(featureDat))
+
+  countsDat <- countsDat[rownames(featureDat), ]
+
+  scaledDat <- scaledDat[rownames(featureDat), ]
+
+  dataDat <- dataDat[rownames(featureDat), ]
+
+  exprData <- list("RawData.Seurat" = dataDat,
+                    "Counts.Seurat" = countsDat,
+                    "ScaleData.Seurat" = scaledDat)
+
+  sce <- SingleCellExperiment::SingleCellExperiment(reducedDims = cellEmbeddings, colData = phenoDat, rowData = featureDat, assays = exprData)
+
+  return(sce)
+
 }
