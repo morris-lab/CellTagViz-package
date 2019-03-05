@@ -28,15 +28,15 @@ seuratV3 <- function(seuratObj){
 
          if(nrow(temp) < nrow(rowDat)){
 
-           emptyMat <- Matrix::Matrix(data = 0, nrow = nrow(rowDat), ncol = nrow(colDat), sparse = TRUE)
+           #emptyMat <- Matrix::Matrix(data = 0, nrow = nrow(rowDat), ncol = nrow(colDat), sparse = TRUE)
 
-           colnames(emptyMat) <- rownames(colDat)
+           #colnames(emptyMat) <- rownames(colDat)
 
-           rownames(emptyMat) <- rowDat[[1]]
+           #rownames(emptyMat) <- rowDat[[1]]
 
-           emptyMat[rownames(temp), colnames(temp)] <- temp[rownames(temp), colnames(temp)]
+           #emptyMat[rownames(temp), colnames(temp)] <- temp[rownames(temp), colnames(temp)]
 
-           exprList[[id]] <- emptyMat
+           exprList[[id]] <- addMissingFeatures(temp, rowDat[[1]])
 
          } else(
 
@@ -60,6 +60,22 @@ seuratV3 <- function(seuratObj){
   cellEmbeddings <- as(cellEmbeddings, "SimpleList")
 
   sce <- SingleCellExperiment::SingleCellExperiment(colData = colDat, rowData = rowDat, assays = exprList, reducedDims = cellEmbeddings)
+
+}
+
+addMissingFeatures <- function(dataMat, features){
+
+  missingFeatures <- features[! features %in% rownames(dataMat)]
+
+  featureMat <- Matrix::Matrix(data = 0, nrow = length(missingFeatures), ncol = ncol(dataMat))
+
+  rownames(featureMat) <- missingFeatures
+
+  colnames(featureMat) <- colnames(dataMat)
+
+  dataMat <- rbind(dataMat, featureMat)
+
+  return(dataMat)
 
 }
 
