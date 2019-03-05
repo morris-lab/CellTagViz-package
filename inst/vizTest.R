@@ -5,6 +5,7 @@ library(shinythemes)
 library(ggplot2)
 library(SingleCellExperiment)
 library(Seurat)
+library(S4Vectors)
 
 library(CellTagViz)
 

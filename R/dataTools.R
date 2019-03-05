@@ -479,15 +479,15 @@ addSeuratv3 <- function(seuratObj){
 
   phenoDat <- seuratObj@meta.data
 
-  colnames(phenoDat) <- paste0(colnames(phenoDat), ".Seurat")
+  colnames(phenoDat) <- paste0(colnames(phenoDat), ".SeuratV3")
 
-  featureDat <- data.frame("GeneNames.Seurat" = rownames(seuratObj@assays$RNA))
+  featureDat <- data.frame("GeneNames.SeuratV3" = rownames(seuratObj@assays$RNA))
 
   rownames(featureDat) <- featureDat[[1]]
 
   redMethods <- names(seuratObj@reductions)
 
-  names(redMethods) <- paste0(redMethods, ".Seurat")
+  names(redMethods) <- paste0(redMethods, ".SeuratV3")
 
   cellEmbeddings <- lapply(redMethods, function(id){
 
@@ -503,24 +503,37 @@ addSeuratv3 <- function(seuratObj){
 
   dataDat <- Seurat::GetAssayData(seuratObj, slot = "data")
 
-  countsDat <- makeDataMatrix(data2add = countsDat, cellBCs = rownames(phenoDat), features = rownames(featureDat))
+  countsDat <- addMissingFeatures(dataMat = countsDat, features = featureDat[[1]])
 
-  scaledDat <- makeDataMatrix(data2add = scaledDat, cellBCs = rownames(phenoDat), features = rownames(featureDat))
+  scaledDat <- addMissingFeatures(dataMat = scaledDat, features = featureDat[[1]])
 
-  dataDat <- makeDataMatrix(data2add = dataDat, cellBCs = rownames(phenoDat), features = rownames(featureDat))
+  dataDat <- addMissingFeatures(dataMat = scaledDat, features = featureDat[[1]])
 
-  countsDat <- countsDat[rownames(featureDat), ]
-
-  scaledDat <- scaledDat[rownames(featureDat), ]
-
-  dataDat <- dataDat[rownames(featureDat), ]
-
-  exprData <- list("RawData.Seurat" = dataDat,
-                    "Counts.Seurat" = countsDat,
-                    "ScaleData.Seurat" = scaledDat)
+  exprData <- list("RawData.SeuratV3" = dataDat,
+                    "Counts.SeuratV3" = countsDat,
+                    "ScaleData.SeuratV3" = scaledDat)
 
   sce <- SingleCellExperiment::SingleCellExperiment(reducedDims = cellEmbeddings, colData = phenoDat, rowData = featureDat, assays = exprData)
 
   return(sce)
+
+}
+
+
+addMissingFeatures <- function(dataMat, features){
+
+  missingFeatures <- features[!features %in% rownames(dataMat)]
+
+  missingMat <- Matrix::Matrix(data = 0, nrow = length(missingFeatures), ncol = ncol(dataMat), sparse = TRUE)
+
+  colnames(missingMat) <- colnames(dataMat)
+
+  rownames(missingMat) <- missingFeatures
+
+  fullMat <- rbind(dataMat, missingMat)
+
+  fullMat <- fullMat[features, ]
+
+  return(fullMat)
 
 }
