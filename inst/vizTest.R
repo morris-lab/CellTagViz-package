@@ -34,25 +34,31 @@ dataList <- list(seurat = seuratObj,
 
 source("~/GitHub/working.Viz/R/dataTools.R")
 
-
-sceSeurat <- addSeuratv3(seuratObj = seuratV3)
-
-reducedDimNames(sceSeurat)
+#source("~/GitHub/working.Viz/R/seuratV3data.R")
 
 
+#sceSeurat <- addSeuratv3(seuratObj = seuratV3)
 
+sceSeurat <- addseuratV3(seuratObj = seuratV3)
 
+SingleCellExperiment::reducedDimNames(sceSeurat)
 
-
-
-
+SummarizedExperiment::assayNames(sceSeurat)
 
 
 
 
 
 
-sce <- CellTagViz::makeVizData(dataSets = dataList)
+
+
+
+
+
+
+
+
+# sce <- CellTagViz::makeVizData(dataSets = dataList)
 
 
 

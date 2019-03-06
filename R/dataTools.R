@@ -475,15 +475,52 @@ addMonocleDataNew <- function(monocleObj){
 
 }
 
-addSeuratv3 <- function(seuratObj){
 
-  phenoDat <- seuratObj@meta.data
 
-  colnames(phenoDat) <- paste0(colnames(phenoDat), ".SeuratV3")
+#' @importClassesFrom S4Vectors SimpleList
+#'
+#'
 
-  featureDat <- data.frame("GeneNames.SeuratV3" = rownames(seuratObj@assays$RNA))
 
-  rownames(featureDat) <- featureDat[[1]]
+
+addseuratV3 <- function(seuratObj){
+
+  colDat <- seuratObj@meta.data
+
+  rowDat <- data.frame(rownames(seuratObj@assays$RNA@counts))
+
+  rownames(rowDat) <- rowDat[[1]]
+
+  exprList <- list()
+
+  slots <- c("counts", "data", "scale.data")
+
+  for(i in names(seuratObj@assays)){
+
+    for(j in slots){
+
+      id <- paste0(i, ".", j, ".SeuratV3")
+
+      temp <- GetAssayData(seuratObj, assay = i, slot = j)
+
+      if(length(temp) > 0){
+
+        if(nrow(temp) < nrow(rowDat)){
+
+          datAssay <- addMissingFeatures(temp, rowDat[[1]])
+
+          datAssay <- datAssay[rowDat[[1]], ]
+
+          exprList[[id]] <- datAssay
+
+        } else(
+
+          exprList[[id]] <- temp[rowDat[[1]], ]
+
+        )
+      }
+    }
+  }
 
   redMethods <- names(seuratObj@reductions)
 
@@ -497,43 +534,26 @@ addSeuratv3 <- function(seuratObj){
 
   cellEmbeddings <- as(cellEmbeddings, "SimpleList")
 
-  countsDat <- Seurat::GetAssayData(seuratObj, slot = "counts")
+  sce <- SingleCellExperiment::SingleCellExperiment(colData = colDat, rowData = rowDat, assays = exprList)
 
-  scaledDat <- Seurat::GetAssayData(seuratObj, slot = "scale.data")
-
-  dataDat <- Seurat::GetAssayData(seuratObj, slot = "data")
-
-  countsDat <- addMissingFeatures(dataMat = countsDat, features = featureDat[[1]])
-
-  scaledDat <- addMissingFeatures(dataMat = scaledDat, features = featureDat[[1]])
-
-  dataDat <- addMissingFeatures(dataMat = scaledDat, features = featureDat[[1]])
-
-  exprData <- list("RawData.SeuratV3" = dataDat,
-                    "Counts.SeuratV3" = countsDat,
-                    "ScaleData.SeuratV3" = scaledDat)
-
-  sce <- SingleCellExperiment::SingleCellExperiment(reducedDims = cellEmbeddings, colData = phenoDat, rowData = featureDat, assays = exprData)
+  SingleCellExperiment::reducedDims(sce) <- cellEmbeddings
 
   return(sce)
 
 }
 
-
 addMissingFeatures <- function(dataMat, features){
 
-  missingFeatures <- features[!features %in% rownames(dataMat)]
+  missingFeatures <- features[! features %in% rownames(dataMat)]
 
-  missingMat <- Matrix::Matrix(data = 0, nrow = length(missingFeatures), ncol = ncol(dataMat), sparse = TRUE)
+  featureMat <- Matrix::Matrix(data = 0, nrow = length(missingFeatures), ncol = ncol(dataMat))
 
-  colnames(missingMat) <- colnames(dataMat)
+  rownames(featureMat) <- missingFeatures
 
-  rownames(missingMat) <- missingFeatures
+  colnames(featureMat) <- colnames(dataMat)
 
-  fullMat <- rbind(dataMat, missingMat)
+  dataMat <- rbind(dataMat, featureMat)
 
-  fullMat <- fullMat[features, ]
-
-  return(fullMat)
+  return(dataMat)
 
 }

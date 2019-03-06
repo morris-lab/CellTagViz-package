@@ -1,10 +1,12 @@
 
 
+#' @importClassesFrom S4Vectors SimpleList
+#'
+#'
 
 
 
-
-seuratV3 <- function(seuratObj){
+addseuratV3 <- function(seuratObj){
 
   colDat <- seuratObj@meta.data
 
@@ -28,19 +30,15 @@ seuratV3 <- function(seuratObj){
 
          if(nrow(temp) < nrow(rowDat)){
 
-           #emptyMat <- Matrix::Matrix(data = 0, nrow = nrow(rowDat), ncol = nrow(colDat), sparse = TRUE)
+           datAssay <- addMissingFeatures(temp, rowDat[[1]])
 
-           #colnames(emptyMat) <- rownames(colDat)
+           datAssay <- datAssay[rowDat[[1]], ]
 
-           #rownames(emptyMat) <- rowDat[[1]]
-
-           #emptyMat[rownames(temp), colnames(temp)] <- temp[rownames(temp), colnames(temp)]
-
-           exprList[[id]] <- addMissingFeatures(temp, rowDat[[1]])
+           exprList[[id]] <- datAssay
 
          } else(
 
-          exprList[[id]] <- temp
+          exprList[[id]] <- temp[rowDat[[1]], ]
 
         )
       }
@@ -49,7 +47,7 @@ seuratV3 <- function(seuratObj){
 
   redMethods <- names(seuratObj@reductions)
 
-  names(redMethods) <- paste0(redMethods, ".Seurat")
+  names(redMethods) <- paste0(redMethods, ".SeuratV3")
 
   cellEmbeddings <- lapply(redMethods, function(id){
 
@@ -59,7 +57,11 @@ seuratV3 <- function(seuratObj){
 
   cellEmbeddings <- as(cellEmbeddings, "SimpleList")
 
-  sce <- SingleCellExperiment::SingleCellExperiment(colData = colDat, rowData = rowDat, assays = exprList, reducedDims = cellEmbeddings)
+  sce <- SingleCellExperiment::SingleCellExperiment(colData = colDat, rowData = rowDat, assays = exprList)
+
+  SingleCellExperiment::reducedDims(sce) <- cellEmbeddings
+
+  return(sce)
 
 }
 

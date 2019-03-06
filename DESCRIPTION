@@ -19,5 +19,6 @@ Imports:
     viridis,
     scales,
     SummarizedExperiment,
-    magrittr
+    magrittr,
+    S4Vectors
 RoxygenNote: 6.1.1
