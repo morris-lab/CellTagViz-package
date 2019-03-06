@@ -16,9 +16,8 @@
 #' stored in the SCE object. Once again the names for each set of cell embeddings
 #' is suffixed with '.Seurat' to identify the origins of the embeddings.
 #'
-#' @param sce Single Cell Experiment Object used to store data
 #'
-#' @param seurat Seurat Object from which data will be transferred from.
+#' @param seuratObj Seurat Object from which data will be transferred from.
 #'
 #' @return The function returns a SingleCellExperiment object which stores select
 #' data from the given seurat object.
@@ -54,7 +53,7 @@ makeSCESeurat <- function(seuratObj) {
 
   names(cellEmbeddings) <- paste0(names(seuratObj@dr), ".SeuratV2")
 
-  cellEmbeddings <- as(cellEmbeddings, "SimpleList")
+  cellEmbeddings <- methods::as(cellEmbeddings, "SimpleList")
 
   sce <- SingleCellExperiment::SingleCellExperiment(colData = colDat, rowData = rowDat, assays = assayList)
 
@@ -97,7 +96,7 @@ makeSCESeuratV3 <- function(seuratObj){
 
       id <- paste0(i, ".", j, ".SeuratV3")
 
-      temp <- GetAssayData(seuratObj, assay = i, slot = j)
+      temp <- Seurat::GetAssayData(seuratObj, assay = i, slot = j)
 
       if(length(temp) > 0){
 
@@ -128,7 +127,7 @@ makeSCESeuratV3 <- function(seuratObj){
 
   })
 
-  cellEmbeddings <- as(cellEmbeddings, "SimpleList")
+  cellEmbeddings <- methods::as(cellEmbeddings, "SimpleList")
 
   sce <- SingleCellExperiment::SingleCellExperiment(colData = colDat, rowData = rowDat, assays = exprList)
 
@@ -197,15 +196,12 @@ makeSCEMonocle <- function(monocleObj){
 
 
 
-#' Title
+#' Function to add missing features to a matrix.
 #'
-#' @param dataMat
-#' @param features
+#' @param dataMat Matrix
+#' @param features List of all features expected
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return Matrix with missing features added
 #'
 
 addMissingFeatures <- function(dataMat, features){
@@ -283,7 +279,7 @@ combineSCE <- function(dataSets){
 
   rDat <- sapply(sceList, simplify = TRUE, function(sce){
 
-    rowData(sce)
+    SingleCellExperiment::rowData(sce)
 
   })
 
@@ -291,7 +287,7 @@ combineSCE <- function(dataSets){
 
   cDat <- sapply(sceList, simplify = TRUE, function(sce){
 
-    colData(sce)
+    SingleCellExperiment::colData(sce)
 
   })
 
@@ -299,7 +295,7 @@ combineSCE <- function(dataSets){
 
   redDat <- sapply(sceList, simplify = TRUE, function(sce){
 
-    reducedDims(sce)
+    SingleCellExperiment::reducedDims(sce)
 
   })
 
@@ -307,7 +303,7 @@ combineSCE <- function(dataSets){
 
   datAssay <- sapply(sceList, function(sce){
 
-    assays(sce)
+    SummarizedExperiment::assays(sce)
 
   })
 

@@ -20,5 +20,7 @@ Imports:
     scales,
     SummarizedExperiment,
     magrittr,
-    S4Vectors
+    S4Vectors,
+    Seurat,
+    Biobase
 RoxygenNote: 6.1.1
