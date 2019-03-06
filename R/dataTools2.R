@@ -48,23 +48,6 @@ makeSCESeurat <- function(seuratObj) {
 
   assayList <- list("RawData.SeuratV2" = seuratObj@raw.data, "ScaleData.SeuratV2" = seuratObj@scale.data, "Data.SeuratV2" = seuratObj@data)
 
-  # assay(sce, "RawData.SeuratV2") <-
-  #   makeDataMatrix(
-  #     data2add = seurat@raw.data,
-  #     cellBCs = barcodeList,
-  #     features = featureList
-  #   )
-  #
-  # assay(sce, "ScaleData.Seurat") <-
-  #   makeDataMatrix(
-  #     data2add = seurat@scale.data,
-  #     cellBCs = barcodeList,
-  #     features = featureList
-  #   )
-
-  # sce@colData[rownames(seurat@meta.data), colnames(seurat@meta.data)] <-
-  #   seurat@meta.data[rownames(seurat@meta.data), colnames(seurat@meta.data)]
-
   cellEmbeddings <- lapply(names(seuratObj@dr), function(id) {
     seuratObj@dr[[id]]@cell.embeddings
   })
@@ -266,11 +249,11 @@ makeVizDataNew <- function(dataSets) {
 
   rowDat <- sapply(sceList, FUN = function(x){
 
-     SingleCellExperiment::rowData(x)[featureList, , drop = FALSE]
+     SingleCellExperiment::rowData(x)
 
     })
 
-  rowDat <- S4Vectors::cbind.DataFrame(unlist(rowDat), deparse.level = 0)
+  rowDat <- S4Vectors::cbind.DataFrame(unlist(rowDat))
 
   colDat <- sapply(sceList, FUN = function(x){
 
@@ -278,7 +261,7 @@ makeVizDataNew <- function(dataSets) {
 
   })
 
-  colDat <- S4Vectors::cbind.DataFrame(unlist(colDat), deparse.level = 0)
+  colDat <- S4Vectors::cbind.DataFrame(unlist(colDat))
 
   metaNames <- sapply(colnames(colDat), FUN = function(x){
 
@@ -297,6 +280,34 @@ makeVizDataNew <- function(dataSets) {
     x <- paste0(x[-1], collapse = ".")
 
   })
+
+
+  sceSeuratV2 <- sceSeuratV2[rownames(rowDat), rownames(colDat)]
+
+  sceSeuratV3 <- sceSeuratV3[rownames(rowDat), rownames(colDat)]
+
+  sceMonocle <- sceMonocle[rownames(rowDat), rownames(colDat)]
+
+
+  SummarizedExperiment::rowData(sceSeuratV2) <- rowDat
+
+  SummarizedExperiment::rowData(sceSeuratV3) <- rowDat
+
+  SummarizedExperiment::rowData(sceMonocle) <- rowDat
+
+  SummarizedExperiment::colData(sceSeuratV2) <- colDat
+
+  SummarizedExperiment::colData(sceSeuratV3) <- colDat
+
+  SummarizedExperiment::colData(sceMonocle) <- colDat
+
+
+  comboSCE <- cbind(sceSeuratV2, sceSeuratV3, sceMonocle)
+
+
+
+
+
 
   reductionDat <- sapply(sceList, FUN = function(x){
 
@@ -343,3 +354,61 @@ createSCE <- function(scData, objName){
 
 
 
+
+combineSCE <- function(dataSets){
+
+  names(dataSets) <- toupper(names(dataSets))
+
+  sceList <- sapply(names(dataSets), FUN = function(x){createSCE(objName = x, scData = dataSets[[x]])}, USE.NAMES = TRUE, simplify = FALSE)
+
+  cellCounts <- sapply(sceList, ncol, simplify = TRUE)
+
+  cellBCs <- colnames(sceList[[which.min(cellCounts)]])
+
+  featureList <- rownames(sceList[[which.min(cellCounts)]])
+
+  sceList <- sapply(sceList, function(sce){
+
+    sce[featureList, cellBCs]
+
+
+  })
+
+  rDat <- sapply(sceList, simplify = TRUE, function(sce){
+
+    rowData(sce)
+
+  })
+
+  rDat <- Reduce(c, rDat)
+
+  cDat <- sapply(sceList, simplify = TRUE, function(sce){
+
+    colData(sce)
+
+  })
+
+  cDat <- Reduce(c, cDat)
+
+  redDat <- sapply(sceList, simplify = TRUE, function(sce){
+
+    reducedDims(sce)
+
+  })
+
+  redDat <- Reduce(c, redDat)
+
+  datAssay <- sapply(sceList, function(sce){
+
+    assays(sce)
+
+  })
+
+
+  datAssay <- Reduce(c, datAssay)
+
+
+  finalSCE <- SingleCellExperiment::SingleCellExperiment(colData = cDat, rowData = rDat, assays = datAssay, reducedDims = redDat)
+
+
+}
