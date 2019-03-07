@@ -9,26 +9,26 @@
 #library(CellTagViz)
 
 
-monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
+#monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
 
 #monoclePath <- "../../../Desktop/unsupervised timeline all data.RDS"
 
 #seuratPath <- "../../../Desktop/Warner_CCA_after_TSNE.RDS"
 
-seuratPath <- "~/../Desktop/Warner_CCA_after_TSNE.RDS"
+#seuratPath <- "~/../Desktop/Warner_CCA_after_TSNE.RDS"
 
 #seuratPath <- "~/../Desktop/integrated.subset.RDS"
 
-monocleCDS <- readRDS(monoclePath)
+#monocleCDS <- readRDS(monoclePath)
 
-seuratObj <- readRDS(seuratPath)
-
-
-dataList <- list(seurat = seuratObj,
-  monocle = monocleCDS)
+#seuratObj <- readRDS(seuratPath)
 
 
-sce <- CellTagViz::makeVizData(dataSets = dataList)
+#dataList <- list(seurat = seuratObj,
+# monocle = monocleCDS)
+
+
+#sce <- CellTagViz::makeVizData(dataSets = dataList)
 
 
 

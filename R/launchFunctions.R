@@ -37,11 +37,23 @@ CellTagViz <- function(){
 #'
 #' }
 
-TestApp <- function(){
+TestApp <- function(vizData){
 
   appPath <- system.file("shinyApps", "testApp.R", package = "CellTagViz")
 
-  shiny::shinyAppFile(appFile = appPath)
+  ui <- NULL
+
+  server <- NULL
+
+  source(appPath, local = TRUE)
+
+  serverEnv <- environment(server)
+
+  serverEnv$sce <- vizData
+
+  app <- shiny::shinyApp(ui = ui, server = server)
+
+  shiny::runApp(app)
 
 }
 
