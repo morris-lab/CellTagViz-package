@@ -101,6 +101,8 @@ getMetaData <- function(sce, varName, cells = FALSE) {
 #'
 #' @param cells Character Vector of Cell Barcodes used to subset data.
 #'
+#' @param exprDat YES
+#'
 #' @return This function returns a data frame which can be used to plot and
 #' color cells from an SCE object using ggplot2.
 #'
@@ -130,7 +132,8 @@ makePlotData <-
              redMethod,
              metaVar,
              feature = FALSE,
-             cells = FALSE) {
+             cells = FALSE,
+             exprDat = FALSE) {
     if (!shiny::isTruthy(redMethod)) {
       plotData <- SingleCellExperiment::colData(sce)
 
@@ -142,7 +145,8 @@ makePlotData <-
             plotData = plotData,
             feature = feature,
             redMethod = "seurat",
-            inputSCE = sce
+            inputSCE = sce,
+            exprDat = exprDat
           )
 
         return(plotData)
@@ -181,7 +185,8 @@ makePlotData <-
           plotData = plotData,
           feature = feature,
           redMethod = redMethod,
-          inputSCE = sce
+          inputSCE = sce,
+          exprDat = exprDat
         )
     }
 
@@ -206,6 +211,8 @@ makePlotData <-
 #'
 #' @param inputSCE SingleCellExperiment object which contains data being used.
 #'
+#' @param exprDat YES
+#'
 #' @return The function returns the given data frame with a column added which
 #' contains the expression values for the user chosen gene.
 #'
@@ -219,14 +226,16 @@ makePlotData <-
 #' plotData <- addFeatureExpr(foo, bar, foo)
 #' }
 #'
-addFeatureExpr <- function(plotData, feature, redMethod, inputSCE) {
-  if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
-    exprData <-
-      SummarizedExperiment::assay(inputSCE, "ScaleData.Seurat")[feature, ]
-  } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
-    exprData <-
-      SummarizedExperiment::assay(inputSCE, "Counts.Monocle")[feature, ]
-  }
+addFeatureExpr <- function(plotData, feature, redMethod, inputSCE, exprDat) {
+  # if (grepl(pattern = "Seurat", redMethod, ignore.case = TRUE)) {
+  #   exprData <-
+  #     SummarizedExperiment::assay(inputSCE, "ScaleData.Seurat")[feature, ]
+  # } else if (grepl(pattern = "Monocle", redMethod, ignore.case = TRUE)) {
+  #   exprData <-
+  #     SummarizedExperiment::assay(inputSCE, "Counts.Monocle")[feature, ]
+  # }
+
+  exprData <- SummarizedExperiment::assay(inputSCE, exprDat)[feature, ]
 
   exprData <- as.data.frame(exprData)
 

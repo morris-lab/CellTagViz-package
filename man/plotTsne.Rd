@@ -5,7 +5,8 @@
 \title{Parses shiny user input and plots dimension reduction visualiztions.}
 \usage{
 plotTsne(sce, feature = FALSE, metaVar = FALSE, clones = FALSE,
-  factor = FALSE, contour = FALSE, redMethod = FALSE)
+  factor = FALSE, contour = FALSE, redMethod = FALSE,
+  exprDat = FALSE)
 }
 \arguments{
 \item{sce}{Yes}
@@ -21,6 +22,8 @@ plotTsne(sce, feature = FALSE, metaVar = FALSE, clones = FALSE,
 \item{contour}{Yes}
 
 \item{redMethod}{Yes}
+
+\item{exprDat}{Yes}
 }
 \value{
 This function returns a ggplot2 object

@@ -43,7 +43,7 @@ server <- function(input, output, session){
 
     return(input)
 
-  }) %>% debounce(2000)
+  }) %>% debounce(1000)
 
   callModule(createPlot, id = "plots", plotOptions = userInput(), inputSCE = sce)
 

@@ -192,7 +192,8 @@ featureChoiceUI <- function(id, inputSCE) {
   shiny::selectizeInput(
     inputId = ns("GENE"),
     label = "Choose a Gene",
-    choices = c(Choose = "", rownames(inputSCE))
+    choices = c(Choose = "", rownames(inputSCE)),
+    selected = "Apoa1"
   )
 }
 
@@ -438,6 +439,7 @@ tsneSideBarUI <- function(id, inputSCE) {
   shiny::conditionalPanel(
     condition = "input.plots == 'tSNE'",
     reductionChoiceUI(id, inputSCE = inputSCE),
+    exprAssayChoiceUI(id, inputSCE = inputSCE),
     featureChoiceUI(id, inputSCE = inputSCE),
     metaChoiceUI(id, inputSCE = inputSCE),
     contourButtonUI(id),
@@ -594,6 +596,7 @@ scatterSideBarUI <- function(id, inputSCE) {
     condition = "input.plots == 'Scatter Plots'",
     featureChoiceUI(id, inputSCE = inputSCE),
     metaChoiceUI(id, inputSCE = inputSCE),
+    exprAssayChoiceUI(id, inputSCE = inputSCE),
     factorButtonUI(id),
     shiny::helpText("Scatter Chart Panel")
   )
@@ -726,7 +729,7 @@ plotsPanelMinimalUI <- function(id, inputData) {
           type = "pills",
 
           shiny::tabPanel("tSNE"),
-          shiny::tabPanel("Network"),
+          #shiny::tabPanel("Network"),
           #shiny::tabPanel("Pseudotime"),
           shiny::tabPanel("Stacked Bar Charts"),
           shiny::tabPanel("Scatter Plots")
@@ -734,12 +737,39 @@ plotsPanelMinimalUI <- function(id, inputData) {
         ),
 
         shiny::tagList(
-          shiny::plotOutput(ns("testPlot")),
-          shiny::verbatimTextOutput(ns("inputOut"))
+          shiny::plotOutput(ns("testPlot"))
+          #shiny::verbatimTextOutput(ns("inputOut"))
         )
       )
     )
   )
 }
 
+
+#' Module which defines a selection input for choosing a dimension reduction
+#' method.
+#'
+#' This module is used to define the UI of the dimension reduction selection
+#' input for CellTagViz. This module is a drop down list which allows ths user
+#' to choose which dimension reduction method to visualize. The choices for this
+#' list are the names of the datasets returned by \code{reducedDimNames}.
+#' This is a simple module which can be used for many visualizations.
+#'
+#' @param id String which defines the namespace for the module
+#'
+#' @param inputSCE SingleCellExperiment object which contains current data.
+#'
+#' @return Returns a shiny UI element
+#'
+
+
+exprAssayChoiceUI <- function(id, inputSCE) {
+  ns <- shiny::NS(id)
+
+  shiny::selectizeInput(
+    inputId = ns("EXPR"),
+    label = "Choose Expresssion Data",
+    choices = SummarizedExperiment::assayNames(inputSCE)
+  )
+}
 

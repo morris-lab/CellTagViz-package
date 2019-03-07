@@ -4,7 +4,8 @@
 \alias{makePlotData}
 \title{Generates ggplot2 compatible data frames.}
 \usage{
-makePlotData(sce, redMethod, metaVar, feature = FALSE, cells = FALSE)
+makePlotData(sce, redMethod, metaVar, feature = FALSE, cells = FALSE,
+  exprDat = FALSE)
 }
 \arguments{
 \item{sce}{SingleCellExperiment Object}
@@ -16,6 +17,8 @@ makePlotData(sce, redMethod, metaVar, feature = FALSE, cells = FALSE)
 \item{feature}{String Name of a feature to return from assay data.}
 
 \item{cells}{Character Vector of Cell Barcodes used to subset data.}
+
+\item{exprDat}{YES}
 }
 \value{
 This function returns a data frame which can be used to plot and

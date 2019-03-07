@@ -55,7 +55,8 @@ createPlot <-
           factor = plotOpts$`TSNE-isFactor`,
           contour = plotOpts$`TSNE-addContour`,
           feature = plotOpts$`TSNE-GENE`,
-          redMethod = plotOpts$`TSNE-REDUCTION`
+          redMethod = plotOpts$`TSNE-REDUCTION`,
+          exprDat = plotOpts$`TSNE-EXPR`
         ),
 
         "Network" = plotNetwork(sce = cars),
@@ -79,7 +80,8 @@ createPlot <-
           sce = inputSCE,
           metaVar = plotOpts$`SCATTER-META`,
           feature = plotOpts$`SCATTER-GENE`,
-          factor = plotOpts$`SCATTER-isFactor`
+          factor = plotOpts$`SCATTER-isFactor`,
+          exprDat = plotOpts$`SCATTER-EXPR`
         ),
 
         "Meta Data" = plotMeta(sce = cars)
@@ -117,6 +119,8 @@ easyPlot <- function(...) {
 #'
 #' @param redMethod Yes
 #'
+#' @param exprDat Yes
+#'
 #' @return This function returns a ggplot2 object
 #'
 
@@ -128,13 +132,15 @@ plotTsne <-
              clones = FALSE,
              factor = FALSE,
              contour = FALSE,
-             redMethod = FALSE) {
+             redMethod = FALSE,
+             exprDat = FALSE) {
     plotData <-
       makePlotData(
         sce = sce,
         redMethod = redMethod,
         metaVar = metaVar,
-        feature = feature
+        feature = feature,
+        exprDat = exprDat
       )
 
     if (factor) {
@@ -163,7 +169,7 @@ plotTsne <-
     if (contour) {
       datCols <-
         grep(
-          pattern = "tsne",
+          pattern = "Dim",
           x = colnames(plotData),
           ignore.case = TRUE,
           value = TRUE
@@ -311,13 +317,15 @@ plotScatter <-
              metaVar = FALSE,
              clones = FALSE,
              factor = FALSE,
-             contour = FALSE) {
+             contour = FALSE,
+             exprDat = FALSE) {
     plotData <-
       makePlotData(
         sce = sce,
         feature = feature,
         metaVar = metaVar,
-        redMethod = FALSE
+        redMethod = FALSE,
+        exprDat = exprDat
       )
 
     if (shiny::isTruthy(factor)) {
