@@ -2,12 +2,12 @@
 
 library(CellTagViz)
 
-library(SingleCellExperiment)
+#library(SingleCellExperiment)
 
-library(shiny)
+#library(shiny)
 
 
-source("~/GitHub/working.Viz/R/dataTools2.R")
+#source("~/GitHub/working.Viz/R/dataTools2.R")
 
 monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
 
@@ -25,32 +25,33 @@ dataSets <- list("seuratv2" = seurat, "seuratv3" = seuratv3, "monocle" = monocle
 
 sce <- combineSCE(dataSets = dataSets)
 
+TestApp(sce)
 
-ui <- navbarPage(
-
-  theme = shinythemes::shinytheme("yeti"),
-  title = "CellTagViz",
-
-  plotsPanelMinimalUI("plots", inputData = sce),
-  dataPanelUI("data", inputData = sce)
-
-)
-
-
-server <- function(input, output, session){
-
-  userInput <- reactive({
-
-    return(input)
-
-  }) %>% debounce(1000)
-
-  callModule(createPlot, id = "plots", plotOptions = userInput(), inputSCE = sce)
-
-}
-
-
-
-
-shinyApp(ui = ui, server = server)
-
+# ui <- navbarPage(
+#
+#   theme = shinythemes::shinytheme("yeti"),
+#   title = "CellTagViz",
+#
+#   plotsPanelMinimalUI("plots", inputData = sce),
+#   dataPanelUI("data", inputData = sce)
+#
+# )
+#
+#
+# server <- function(input, output, session){
+#
+#   userInput <- reactive({
+#
+#     return(input)
+#
+#   }) %>% debounce(1000)
+#
+#   callModule(createPlot, id = "plots", plotOptions = userInput(), inputSCE = sce)
+#
+# }
+#
+#
+#
+#
+# shinyApp(ui = ui, server = server)
+#
