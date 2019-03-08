@@ -12,7 +12,7 @@ Seurat V3, and Monocle datasets.
 The package can be installed from github using the package devtools.
 
 ```{r}
-devtools::install_github()
+devtools::install_github(repo = "morris-lab/CellTagViz-package")
 
 ```
 
