@@ -732,7 +732,7 @@ plotsPanelMinimalUI <- function(id, inputData) {
           # shiny::tabPanel("Network"),
           # shiny::tabPanel("Pseudotime"),
           shiny::tabPanel("Stacked Bar Charts"),
-          shiny::tabPanel("Scatter Plots")
+          shiny::tabPanel("Scatter/Violin Plots", value = "Scatter Plots")
           # shiny::tabPanel("Meta Data")
         ),
 
