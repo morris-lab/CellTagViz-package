@@ -729,16 +729,16 @@ plotsPanelMinimalUI <- function(id, inputData) {
           type = "pills",
 
           shiny::tabPanel("tSNE"),
-          #shiny::tabPanel("Network"),
-          #shiny::tabPanel("Pseudotime"),
+          # shiny::tabPanel("Network"),
+          # shiny::tabPanel("Pseudotime"),
           shiny::tabPanel("Stacked Bar Charts"),
           shiny::tabPanel("Scatter Plots")
-          #shiny::tabPanel("Meta Data")
+          # shiny::tabPanel("Meta Data")
         ),
 
         shiny::tagList(
           shiny::plotOutput(ns("testPlot"))
-          #shiny::verbatimTextOutput(ns("inputOut"))
+          # shiny::verbatimTextOutput(ns("inputOut"))
         )
       )
     )
@@ -772,4 +772,3 @@ exprAssayChoiceUI <- function(id, inputSCE) {
     choices = SummarizedExperiment::assayNames(inputSCE)
   )
 }
-

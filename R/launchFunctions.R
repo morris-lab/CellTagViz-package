@@ -12,15 +12,12 @@
 #' \dontrun{
 #'
 #' yes
-#'
 #' }
-
-CellTagViz <- function(){
-
+#'
+CellTagViz <- function() {
   appPath <- system.file("shinyApps", "vizTest.R", package = "CellTagViz")
 
   shiny::shinyAppFile(appFile = appPath)
-
 }
 
 
@@ -34,10 +31,9 @@ CellTagViz <- function(){
 #' \dontrun{
 #'
 #' Yes
-#'
 #' }
-
-TestApp <- function(vizData){
+#'
+TestApp <- function(vizData) {
 
   # require(shiny)
   #
@@ -71,8 +67,4 @@ TestApp <- function(vizData){
   appPath <- system.file("shinyApps", "testApp.R", package = "CellTagViz")
 
   shiny::shinyAppFile(appPath)
-
 }
-
-
-

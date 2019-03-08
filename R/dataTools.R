@@ -34,7 +34,6 @@
 #' @export
 
 makeSCESeurat <- function(seuratObj) {
-
   colDat <- seuratObj@meta.data
 
   colnames(colDat) <- paste0(colnames(colDat), ".SeuratV2")
@@ -74,8 +73,7 @@ makeSCESeurat <- function(seuratObj) {
 #'
 #'
 
-makeSCESeuratV3 <- function(seuratObj){
-
+makeSCESeuratV3 <- function(seuratObj) {
   colDat <- seuratObj@meta.data
 
   colnames(colDat) <- paste0(colnames(colDat), ".SeuratV3")
@@ -90,29 +88,26 @@ makeSCESeuratV3 <- function(seuratObj){
 
   slots <- c("counts", "data", "scale.data")
 
-  for(i in names(seuratObj@assays)){
-
-    for(j in slots){
-
+  for (i in names(seuratObj@assays)) {
+    for (j in slots) {
       id <- paste0(i, ".", j, ".SeuratV3")
 
       temp <- Seurat::GetAssayData(seuratObj, assay = i, slot = j)
 
-      if(length(temp) > 0){
-
-        if(nrow(temp) < nrow(rowDat)){
-
+      if (length(temp) > 0) {
+        if (nrow(temp) < nrow(rowDat)) {
           datAssay <- addMissingFeatures(temp, rowDat[[1]])
 
           datAssay <- datAssay[rowDat[[1]], ]
 
           exprList[[id]] <- datAssay
+        } else {
+          (
 
-        } else(
+            exprList[[id]] <- temp[rowDat[[1]], ]
 
-          exprList[[id]] <- temp[rowDat[[1]], ]
-
-        )
+          )
+        }
       }
     }
   }
@@ -121,10 +116,8 @@ makeSCESeuratV3 <- function(seuratObj){
 
   names(redMethods) <- paste0(redMethods, ".SeuratV3")
 
-  cellEmbeddings <- lapply(redMethods, function(id){
-
+  cellEmbeddings <- lapply(redMethods, function(id) {
     Seurat::Embeddings(seuratObj, reduction = id)
-
   })
 
   cellEmbeddings <- methods::as(cellEmbeddings, "SimpleList")
@@ -134,7 +127,6 @@ makeSCESeuratV3 <- function(seuratObj){
   SingleCellExperiment::reducedDims(sce) <- cellEmbeddings
 
   return(sce)
-
 }
 
 
@@ -162,8 +154,7 @@ makeSCESeuratV3 <- function(seuratObj){
 #'
 #'
 
-makeSCEMonocle <- function(monocleObj){
-
+makeSCEMonocle <- function(monocleObj) {
   featureDat <- Biobase::fData(monocleObj)
 
   geneCol <- grep(pattern = "gene_short_name", x = colnames(featureDat), fixed = TRUE)
@@ -180,15 +171,16 @@ makeSCEMonocle <- function(monocleObj){
 
   colnames(phenoDat) <- paste0(colnames(phenoDat), ".Monocle")
 
-  monSCE <- SingleCellExperiment::SingleCellExperiment(colData = phenoDat,
-    rowData = featureDat)
+  monSCE <- SingleCellExperiment::SingleCellExperiment(
+    colData = phenoDat,
+    rowData = featureDat
+  )
 
   SingleCellExperiment::reducedDims(monSCE) <- S4Vectors::SimpleList("Pseudotime.Monocle" = pseudoDims)
 
   SummarizedExperiment::assay(monSCE, "Monocle.Counts") <- monCounts
 
   return(monSCE)
-
 }
 
 
@@ -204,9 +196,8 @@ makeSCEMonocle <- function(monocleObj){
 #' @return Matrix with missing features added
 #'
 
-addMissingFeatures <- function(dataMat, features){
-
-  missingFeatures <- features[! features %in% rownames(dataMat)]
+addMissingFeatures <- function(dataMat, features) {
+  missingFeatures <- features[!features %in% rownames(dataMat)]
 
   featureMat <- Matrix::Matrix(data = 0, nrow = length(missingFeatures), ncol = ncol(dataMat))
 
@@ -217,7 +208,6 @@ addMissingFeatures <- function(dataMat, features){
   dataMat <- rbind(dataMat, featureMat)
 
   return(dataMat)
-
 }
 
 
@@ -234,10 +224,8 @@ addMissingFeatures <- function(dataMat, features){
 #' @return A SingleCellExperiment Object
 #'
 
-createSCE <- function(scData, objName){
-
+createSCE <- function(scData, objName) {
   switch(EXPR = objName, "SEURATV2" = makeSCESeurat(scData), "SEURATV3" = makeSCESeuratV3(scData), "MONOCLE" = makeSCEMonocle(scData))
-
 }
 
 
@@ -258,11 +246,12 @@ createSCE <- function(scData, objName){
 #' @export
 #'
 
-combineSCE <- function(dataSets){
-
+combineSCE <- function(dataSets) {
   names(dataSets) <- toupper(names(dataSets))
 
-  sceList <- sapply(names(dataSets), FUN = function(x){createSCE(objName = x, scData = dataSets[[x]])}, USE.NAMES = TRUE, simplify = FALSE)
+  sceList <- sapply(names(dataSets), FUN = function(x) {
+    createSCE(objName = x, scData = dataSets[[x]])
+  }, USE.NAMES = TRUE, simplify = FALSE)
 
   cellCounts <- sapply(sceList, ncol, simplify = TRUE)
 
@@ -270,41 +259,30 @@ combineSCE <- function(dataSets){
 
   featureList <- rownames(sceList[[which.min(cellCounts)]])
 
-  sceList <- sapply(sceList, function(sce){
-
+  sceList <- sapply(sceList, function(sce) {
     sce[featureList, cellBCs]
-
-
   })
 
-  rDat <- sapply(sceList, simplify = TRUE, function(sce){
-
+  rDat <- sapply(sceList, simplify = TRUE, function(sce) {
     SingleCellExperiment::rowData(sce)
-
   })
 
   rDat <- Reduce(c, rDat)
 
-  cDat <- sapply(sceList, simplify = TRUE, function(sce){
-
+  cDat <- sapply(sceList, simplify = TRUE, function(sce) {
     SingleCellExperiment::colData(sce)
-
   })
 
   cDat <- Reduce(c, cDat)
 
-  redDat <- sapply(sceList, simplify = TRUE, function(sce){
-
+  redDat <- sapply(sceList, simplify = TRUE, function(sce) {
     SingleCellExperiment::reducedDims(sce)
-
   })
 
   redDat <- Reduce(c, redDat)
 
-  datAssay <- sapply(sceList, function(sce){
-
+  datAssay <- sapply(sceList, function(sce) {
     SummarizedExperiment::assays(sce)
-
   })
 
 
@@ -312,8 +290,6 @@ combineSCE <- function(dataSets){
 
 
   finalSCE <- SingleCellExperiment::SingleCellExperiment(colData = cDat, rowData = rDat, assays = datAssay, reducedDims = redDat)
-
-
 }
 
 
