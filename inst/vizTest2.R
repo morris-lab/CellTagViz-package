@@ -23,9 +23,9 @@ seuratv3 <- readRDS(seuratPathV3)
 
 dataSets <- list("seuratv2" = seurat, "seuratv3" = seuratv3, "monocle" = monocleCDS)
 
-sce <- combineSCE(dataSets = dataSets)
+vizData <- combineSCE(dataSets = dataSets)
 
-TestApp(sce)
+TestApp(sce = vizData)
 
 # ui <- navbarPage(
 #

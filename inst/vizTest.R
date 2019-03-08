@@ -28,8 +28,8 @@ seuratObj <- readRDS(seuratPath)
 
 seuratV3 <- readRDS(seuratV3Path)
 
-dataList <- list(seurat = seuratObj,
-  monocle = monocleCDS, seurat3 = seuratV3 )
+dataList <- list(seuratv2 = seuratObj,
+  monocle = monocleCDS, seuratv3 = seuratV3 )
 
 
 source("~/GitHub/working.Viz/R/dataTools.R")

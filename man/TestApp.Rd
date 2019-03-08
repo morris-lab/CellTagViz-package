@@ -4,7 +4,10 @@
 \alias{TestApp}
 \title{Title}
 \usage{
-TestApp()
+TestApp(sce)
+}
+\arguments{
+\item{vizData}{sce object}
 }
 \value{
 Yes
