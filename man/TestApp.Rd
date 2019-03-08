@@ -4,7 +4,7 @@
 \alias{TestApp}
 \title{Title}
 \usage{
-TestApp(sce)
+TestApp(vizData)
 }
 \arguments{
 \item{vizData}{sce object}
@@ -20,6 +20,6 @@ Title
 \dontrun{
 
 Yes
-
 }
+
 }

@@ -7,6 +7,7 @@
 # these modules are functions which return ggplot2 plots.
 ################################################################################
 
+
 #' This is a shiny server function for generating CellTagViz plots.
 #'
 #' \code{createPlot} is a function called in the server function of the
@@ -59,7 +60,7 @@ createPlot <-
           exprDat = plotOpts$`TSNE-EXPR`
         ),
 
-        "Network" = plotNetwork(sce = cars),
+        "Network" = plotNetwork(sce = datasets::cars),
 
         "Pseudotime" = plotPseudotime(
           sce = inputSCE,
@@ -84,7 +85,7 @@ createPlot <-
           exprDat = plotOpts$`SCATTER-EXPR`
         ),
 
-        "Meta Data" = plotMeta(sce = cars)
+        "Meta Data" = plotMeta(sce = datasets::cars)
       )
     })
   }
@@ -92,7 +93,7 @@ createPlot <-
 
 
 easyPlot <- function(...) {
-  p <- ggplot2::quickplot(x = cars$speed, y = cars$dist, ...)
+  p <- ggplot2::quickplot(x = datasets::cars$speed, y = datasets::cars$dist, ...)
 
   return(p)
 }
