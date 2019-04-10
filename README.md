@@ -32,7 +32,7 @@ dataList <- list("SeuratV2" = your_seuratv2_data,
 
 vizData <- combineSCE(dataList)
 
-TestApp(sce = vizData)
+TestApp(vizData = vizData)
 
 ```
 When creating the vizData object the package attempts to preserve all dimension
