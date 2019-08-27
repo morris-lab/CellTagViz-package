@@ -6,7 +6,7 @@ library(ggplot2)
 library(SingleCellExperiment)
 library(Seurat)
 
-library(CellTagViz)
+#library(CellTagViz)
 
 
 monoclePath <- "~/../Desktop/unsupervised timeline all data.RDS"
@@ -24,11 +24,11 @@ monocleCDS <- readRDS(monoclePath)
 seuratObj <- readRDS(seuratPath)
 
 
-dataList <- list(seurat = seuratObj,
+dataList <- list(seuratv2 = seuratObj,
   monocle = monocleCDS)
 
 
-sce <- CellTagViz::makeVizData(dataSets = dataList)
+sce <- CellTagViz::combineSCE(dataSets = dataList)
 
 
 
