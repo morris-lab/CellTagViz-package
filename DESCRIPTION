@@ -22,5 +22,7 @@ Imports:
     magrittr,
     S4Vectors,
     Seurat,
-    Biobase
+    Biobase,
+    shinycssloaders,
+    shinythemes
 RoxygenNote: 6.1.1
