@@ -282,7 +282,7 @@ calculatorPanel <- function(id){
 #If the app is working correctly by itself it should work when incorporated with another app. 
 #To include this app with another we just need to include a few commands to our existing app to implement our new calculator. 
 
-appUI <- navbarPage(
+appUI <- shiny::navbarPage(
   
   title = "CellTag Simulator",
   
